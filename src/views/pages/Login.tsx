@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const history = useHistory();
   const login = useAuthStore(state => state.login);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,7 +15,7 @@ function Login() {
     
     try {
       await login(email, password);
-      navigate('/');
+      history.push('/');
     } catch (err) {
       setError('Invalid email or password');
     }

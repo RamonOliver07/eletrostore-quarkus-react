@@ -1,155 +1,92 @@
-# EletroStore - Loja de Eletrônicos
+# EletroStore: Loja Virtual com Quarkus e React
 
-Aplicação de e-commerce para venda de produtos eletrônicos desenvolvida com Java/Quarkus no backend e React no frontend.
+Este é um projeto de e-commerce desenvolvido como parte de um estudo, utilizando Quarkus para o backend e React para o frontend. A aplicação simula as funcionalidades básicas de uma loja virtual, incluindo listagem de produtos, carrinho de compras e autenticação de usuários.
 
-## Tecnologias Utilizadas
+---
 
-- **Backend**:
-  - Java 17
-  - Quarkus (Framework reativo para Java)
-  - Hibernate e Panache ORM
-  - H2 Database (Banco de dados embutido)
-  - RESTEasy Reactive (API RESTful)
-  - SmallRye JWT (Autenticação)
+## ⚠️ Aviso Importante sobre o Ambiente
 
-- **Frontend**:
-  - React 18
-  - TypeScript
-  - Tailwind CSS
-  - Vite (Build tool)
-  - Zustand (State management)
+Este projeto foi extensivamente modificado para garantir a compatibilidade com um ambiente de desenvolvimento mais antigo (especificamente **macOS 10.12 Sierra**). 
 
-## Funcionalidades
+Como resultado, as versões das principais tecnologias (Quarkus, Node.js, Vite, etc.) foram rebaixadas (downgrade) e podem não corresponder às práticas mais modernas ou aos tutoriais padrão. O código-fonte do frontend também foi adaptado para funcionar com estas versões antigas (ex: migração de `jakarta.*` para `javax.*` no backend, e de React 18/Router v6 para React 17/Router v5 no frontend).
 
-- Catálogo de produtos eletrônicos
-- Sistema de busca e filtragem por categorias
-- Carrinho de compras
-- Cadastro e autenticação de usuários
-- Painel administrativo
-- Processo de checkout com cálculo de frete
-- Histórico de pedidos
-- Dashboard com estatísticas para administradores
+---
 
-## Como executar no Eclipse
+## 🛠️ Tecnologias Utilizadas
 
-### Pré-requisitos
+Esta é a pilha de tecnologias específica que está configurada e funcionando neste projeto:
 
-- Java 17 ou superior
-- Eclipse IDE for Enterprise Java and Web Developers
-- Maven (integrado ao Eclipse)
+#### **Backend**
+* **Quarkus:** `2.16.12.Final`
+* **Java:** `17`
+* **Maven:** `3.6.3`
 
-### Configuração no Eclipse
+#### **Frontend**
+* **Node.js:** `12.22.12`
+* **npm:** `6.14.x`
+* **Vite:** `2.6.14`
+* **React:** `17.0.2`
+* **React Router:** `5.3.0`
+* **TailwindCSS:** `2.2.19`
 
-1. **Importar o projeto**:
-   - File → Import → Existing Maven Projects
-   - Selecione a pasta do projeto
-   - Clique em "Finish"
+---
 
-2. **Configurar o JDK**:
-   - Clique com o botão direito no projeto → Properties
-   - Java Build Path → Libraries → Modulepath/Classpath
-   - Certifique-se de que está usando JDK 17+
+## ⚙️ Pré-requisitos
 
-3. **Executar a aplicação**:
-   - Localize a classe principal (geralmente em `src/main/java`)
-   - Clique com o botão direito → Run As → Java Application
-   - Ou use o Maven: Run As → Maven build → Goals: `quarkus:dev`
+Antes de começar, garanta que você tem as seguintes ferramentas instaladas nas versões corretas. O uso de uma ferramenta como o **SDKMAN!** é altamente recomendado para gerenciar as versões de Java e Node.js.
 
-### Banco de Dados H2
+1.  **Java 17:**
+    ```bash
+    # Exemplo com SDKMAN!
+    sdk install java 17.0.11-tem
+    ```
+2.  **Maven 3.6.3:**
+    * Pode ser instalado manualmente ou via SDKMAN! (`sdk install maven 3.6.3`).
+3.  **Node.js 12.22.12:**
+    ```bash
+    # Exemplo com SDKMAN!
+    sdk install node 12.22.12
+    ```
 
-O projeto agora usa H2 Database (banco embutido), que não requer instalação externa:
+---
 
-- **Tipo**: In-memory database
-- **Console Web**: Disponível em http://localhost:8080/h2-console
-- **URL JDBC**: `jdbc:h2:mem:eletrostore`
-- **Usuário**: `sa`
-- **Senha**: (vazia)
+## 🚀 Configuração e Instalação
 
-### Executando a aplicação
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/RamonOliver07/eletrostore-quarkus-react.git](https://github.com/RamonOliver07/eletrostore-quarkus-react.git)
+    ```
 
-1. **Backend (Quarkus)**:
-   ```bash
-   # No Eclipse: Run As → Maven build
-   # Goals: quarkus:dev
-   
-   # Ou via terminal:
-   ./mvnw quarkus:dev
-   ```
+2.  **Navegue até a pasta do projeto:**
+    ```bash
+    cd eletrostore-quarkus-react
+    ```
 
-2. **Frontend (React)**:
-   ```bash
-   # Em um terminal separado:
-   npm install
-   npm run dev
-   ```
+3.  **Instale as dependências do Frontend:**
+    ```bash
+    npm install
+    ```
 
-### URLs da aplicação
+---
 
-- **Backend API**: http://localhost:8080
-- **Frontend**: http://localhost:5173
-- **Console H2**: http://localhost:8080/h2-console
-- **Swagger UI**: http://localhost:8080/q/swagger-ui (se habilitado)
+## ▶️ Executando a Aplicação
 
-### Dados de teste
+Para a aplicação funcionar completamente, você precisará ter **dois terminais abertos** simultaneamente, um para o backend e um para o frontend.
 
-A aplicação inicializa automaticamente com dados de exemplo:
+### **Terminal 1 - Executando o Backend (Quarkus)**
 
-**Usuários**:
-- **Admin**: admin@eletrostore.com / admin123
-- **Cliente**: cliente@exemplo.com / 123456
+1.  Navegue até a pasta do projeto.
+2.  Execute o comando do Maven:
+    ```bash
+    mvn quarkus:dev
+    ```
+3.  O backend estará rodando e disponível em `http://localhost:8080`.
 
-**Produtos**: Vários produtos de exemplo são criados automaticamente
+### **Terminal 2 - Executando o Frontend (Vite)**
 
-### Estrutura do Projeto
-
-```
-├── src/main/java/com/eletronicos/
-│   ├── model/       # Entidades JPA
-│   ├── resource/    # Endpoints REST
-│   ├── service/     # Lógica de negócio
-│   └── auth/        # Autenticação e autorização
-├── src/main/resources/
-│   ├── application.properties  # Configurações
-│   └── import.sql   # Dados iniciais
-├── src/             # Frontend React
-│   ├── components/  # Componentes React
-│   ├── pages/       # Páginas da aplicação
-│   └── services/    # Serviços de API
-└── pom.xml          # Dependências Maven
-```
-
-### Desenvolvimento no Eclipse
-
-1. **Hot Reload**: O Quarkus suporta hot reload automático
-2. **Debug**: Use o modo debug do Eclipse normalmente
-3. **Logs**: Visualize os logs no console do Eclipse
-4. **Database**: Acesse o console H2 para visualizar dados
-
-### Vantagens do H2 Database
-
-- ✅ Não requer instalação externa
-- ✅ Configuração automática
-- ✅ Console web integrado
-- ✅ Ideal para desenvolvimento e testes
-- ✅ Dados são recriados a cada inicialização (sempre limpo)
-
-### Troubleshooting
-
-1. **Erro de compilação**: Verifique se está usando Java 17+
-2. **Porta ocupada**: Altere a porta em `application.properties`
-3. **Dependências**: Execute `mvn clean install` no terminal
-4. **H2 Console**: Certifique-se de que a aplicação está rodando
-
-## Contribuição
-
-Para contribuir com o projeto:
-
-1. Faça um fork do repositório
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
-
-## Licença
-
-Este projeto está licenciado sob a licença MIT.
+1.  Abra um novo terminal e navegue até a mesma pasta do projeto.
+2.  Execute o comando do npm:
+    ```bash
+    npm run dev
+    ```
+3.  A interface do site estará acessível em `http://localhost:3000` (ou a porta que o Vite indicar no terminal).

@@ -1,3 +1,5 @@
+
+import React from 'react';
 import { ShoppingCart, User, Search, Menu } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
