@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - EletroStore</title>
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <h1>Eletro<span>Store</span></h1>
+                    </a>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="O que você está procurando?">
+                    <button id="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <nav class="nav-menu">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="produtos.html">Produtos</a></li>
+                        <li><a href="categorias.html">Categorias</a></li>
+                        <li><a href="sobre.html">Sobre</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <a href="carrinho.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </a>
+                    <a href="login.html" class="login-button" id="login-button">
+                        <i class="fas fa-user"></i>
+                        <span>Entrar</span>
+                    </a>
+                    <div class="user-dropdown" id="user-dropdown" style="display: none;">
+                        <p id="user-name">Olá, Usuário</p>
+                        <ul>
+                            <li><a href="perfil.html">Meu Perfil</a></li>
+                            <li><a href="pedidos.html">Meus Pedidos</a></li>
+                            <li><a href="#" id="logout-button">Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <div class="container">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2>Criar conta</h2>
+                        <p>Crie sua conta para realizar compras e acompanhar seus pedidos</p>
+                    </div>
+                    
+                    <div id="cadastro-messages"></div>
+                    
+                    <form id="cadastro-form">
+                        <div class="form-group">
+                            <label for="nome">Nome completo</label>
+                            <input type="text" id="nome" name="nome" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="senha">Senha</label>
+                            <input type="password" id="senha" name="senha" required minlength="6">
+                            <small>Sua senha deve ter pelo menos 6 caracteres</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefone">Telefone</label>
+                            <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            <a href="login.html">Já tem uma conta? Faça login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Eletro<span>Store</span></h2>
+                    <p>A sua loja de eletrônicos favorita com os melhores preços do mercado.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="produtos.html">Produtos</a></li>
+                        <li><a href="categorias.html">Categorias</a></li>
+                        <li><a href="sobre.html">Sobre Nós</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Categorias</h3>
+                    <ul id="footer-categories">
+                        <li><a href="produtos.html?categoria=smartphones">Smartphones</a></li>
+                        <li><a href="produtos.html?categoria=notebooks">Notebooks</a></li>
+                        <li><a href="produtos.html?categoria=tablets">Tablets</a></li>
+                        <li><a href="produtos.html?categoria=acessorios">Acessórios</a></li>
+                        <li><a href="produtos.html?categoria=audio">Áudio</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contato</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Av. Tecnologia, 1500 - São Paulo, SP</li>
+                        <li><i class="fas fa-phone"></i> (11) 3456-7890</li>
+                        <li><i class="fas fa-envelope"></i> contato@eletrostore.com.br</li>
+                    </ul>
+                    <div class="social-media">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EletroStore - Todos os direitos reservados</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-amex"></i>
+                    <i class="fab fa-pix"></i>
+                    <i class="fas fa-barcode"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cadastroForm = document.getElementById('cadastro-form');
+            const messagesContainer = document.getElementById('cadastro-messages');
+            
+            // Verificar se o usuário já está logado
+            if (isAuthenticated()) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            cadastroForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const nome = document.getElementById('nome').value;
+                const email = document.getElementById('email').value;
+                const senha = document.getElementById('senha').value;
+                const telefone = document.getElementById('telefone').value;
+                
+                // Validações básicas
+                if (senha.length < 6) {
+                    messagesContainer.innerHTML = `
+                        <div class="alert alert-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            A senha deve ter pelo menos 6 caracteres.
+                        </div>
+                    `;
+                    return;
+                }
+                
+                messagesContainer.innerHTML = '<div class="spinner"></div>';
+                cadastroForm.classList.add('loading');
+                
+                try {
+                    const response = await fetch('/api/usuarios/cadastro', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ nome, email, senha, telefone })
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Erro ao cadastrar usuário');
+                    }
+                    
+                    messagesContainer.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            Cadastro realizado com sucesso! Redirecionando para o login...
+                        </div>
+                    `;
+                    
+                    // Redirecionar para a página de login após 2 segundos
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    
+                } catch (error) {
+                    messagesContainer.innerHTML = `
+                        <div class="alert alert-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            ${error.message}
+                        </div>
+                    `;
+                    cadastroForm.classList.remove('loading');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
