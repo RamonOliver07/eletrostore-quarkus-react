@@ -27,23 +27,19 @@ public class Usuario extends PanacheEntity {
     @Password
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
-    private String senha;
+    private String senha; // <-- A DECLARAÇÃO ESTÁ AQUI
 
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
 
     private String telefone;
-
     private String endereco;
-
     private String cidade;
-
     private String estado;
-
     private String cep;
 
     @Roles
-    private String papel = "usuario"; // usuario ou admin
+    private String papel = "usuario";
 
     @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos = new ArrayList<>();

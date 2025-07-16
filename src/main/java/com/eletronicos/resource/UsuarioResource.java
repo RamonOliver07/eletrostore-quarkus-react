@@ -1,6 +1,7 @@
 package com.eletronicos.resource;
 
 import com.eletronicos.model.Usuario;
+import com.eletronicos.model.UsuarioDTO;
 import com.eletronicos.service.UsuarioService;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -40,12 +41,22 @@ public class UsuarioResource {
     @Path("/cadastro")
     @PermitAll
     @Transactional
-    public Response cadastrar(@Valid Usuario usuario) {
+    public Response cadastrar(@Valid UsuarioDTO usuarioDTO) { // <--- A CORREÇÃO PRINCIPAL ESTÁ AQUI
+        System.out.println("--- DENTRO DO RESOURCE ---");
+       
+
         try {
-            usuarioService.cadastrar(usuario);
-            // Remover senha por segurança
-            usuario.setSenha(null);
-            return Response.status(Response.Status.CREATED).entity(usuario).build();
+            Usuario novoUsuario = new Usuario();
+            novoUsuario.setNome(usuarioDTO.getNome());
+            novoUsuario.setEmail(usuarioDTO.getEmail());
+            novoUsuario.setSenha(usuarioDTO.getSenha());
+
+
+            usuarioService.cadastrar(novoUsuario);
+
+            // Retorna uma resposta segura (sem a senha)
+            novoUsuario.setSenha(null);
+            return Response.status(Response.Status.CREATED).entity(novoUsuario).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Erro ao cadastrar usuário: " + e.getMessage())

@@ -6,6 +6,7 @@
 /Users/ramonoliveira/Downloads/Ecommerce/src/main/java/com/eletronicos/model/ItemPedido.java
 /Users/ramonoliveira/Downloads/Ecommerce/src/main/java/com/eletronicos/resource/ProdutoResource.java
 /Users/ramonoliveira/Downloads/Ecommerce/src/main/java/com/eletronicos/model/Categoria.java
+/Users/ramonoliveira/Downloads/Ecommerce/src/main/java/com/eletronicos/model/UsuarioDTO.java
 /Users/ramonoliveira/Downloads/Ecommerce/src/main/java/com/eletronicos/model/Pedido.java
 /Users/ramonoliveira/Downloads/Ecommerce/src/main/java/com/eletronicos/resource/CarrinhoResource.java
 /Users/ramonoliveira/Downloads/Ecommerce/src/main/java/com/eletronicos/service/UsuarioService.java
