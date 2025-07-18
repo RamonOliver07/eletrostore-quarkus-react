@@ -2,6 +2,7 @@ package com.eletronicos.service;
 
 import com.eletronicos.model.Categoria;
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +17,12 @@ public class CategoriaService {
         return Optional.ofNullable(Categoria.findById(id));
     }
 
-    public void salvar(Categoria categoria) {
+    @Transactional
+    public void criar(Categoria categoria) { // <-- Renomeado de "salvar" para "criar"
         categoria.persist();
     }
 
+    @Transactional
     public Optional<Categoria> atualizar(Long id, Categoria categoria) {
         Optional<Categoria> categoriaOpt = buscarPorId(id);
         
@@ -28,13 +31,13 @@ public class CategoriaService {
             categoriaDb.setNome(categoria.getNome());
             categoriaDb.setDescricao(categoria.getDescricao());
             categoriaDb.setIcone(categoria.getIcone());
-            categoriaDb.persist();
             return Optional.of(categoriaDb);
         }
         
         return Optional.empty();
     }
 
+    @Transactional
     public boolean deletar(Long id) {
         return Categoria.deleteById(id);
     }
