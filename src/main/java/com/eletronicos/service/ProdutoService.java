@@ -65,4 +65,8 @@ public class ProdutoService {
     public boolean deletar(Long id) {
         return Produto.deleteById(id);
     }
+
+	public void criar(Produto produto) {
+		
+	}
 }
