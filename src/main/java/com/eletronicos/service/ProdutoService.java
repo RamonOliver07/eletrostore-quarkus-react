@@ -2,7 +2,11 @@ package com.eletronicos.service;
 
 import com.eletronicos.model.Categoria;
 import com.eletronicos.model.Produto;
+import com.eletronicos.model.ProdutoFormDTO; 
+
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,56 +21,66 @@ public class ProdutoService {
         return Optional.ofNullable(Produto.findById(id));
     }
 
-    public List<Produto> buscarPorCategoria(Long categoriaId) {
-        return Produto.list("categoria.id", categoriaId);
-    }
-
-    public List<Produto> buscarPorNome(String nome) {
-        return Produto.list("nome like ?1", "%" + nome + "%");
-    }
-
     public List<Produto> listarDestaques() {
         return Produto.list("destaque", true);
     }
 
-    public void salvar(Produto produto) {
+    @Transactional
+    public Produto criar(ProdutoFormDTO dto) {
+        // 1. Busca a Categoria pelo ID fornecido no DTO
+        Categoria categoria = Categoria.findById(dto.getIdCategoria());
+        if (categoria == null) {
+            // Lança uma exceção se a categoria não for encontrada
+            throw new WebApplicationException("Categoria com id " + dto.getIdCategoria() + " não encontrada.", 404);
+        }
+
+        // 2. Cria a nova entidade Produto a partir dos dados do DTO
+        Produto produto = new Produto();
+        produto.setNome(dto.getNome());
+        produto.setDescricao(dto.getDescricao());
+        produto.setPreco(dto.getPreco());
+        produto.setEstoque(dto.getEstoque());
+        produto.setImagem(dto.getImagem());
+        produto.setMarca(dto.getMarca());
+        produto.setModelo(dto.getModelo());
+        produto.setDestaque(dto.isDestaque());
+        produto.setCategoria(categoria);
+
+        // 3. Persiste o novo produto no banco de dados
         produto.persist();
+        return produto;
     }
 
-    public Optional<Produto> atualizar(Long id, Produto produto) {
+    @Transactional
+    public Optional<Produto> atualizar(Long id, ProdutoFormDTO dto) {
         Optional<Produto> produtoOpt = buscarPorId(id);
-        
         if (produtoOpt.isPresent()) {
-            Produto produtoDb = produtoOpt.get();
-            produtoDb.setNome(produto.getNome());
-            produtoDb.setDescricao(produto.getDescricao());
-            produtoDb.setPreco(produto.getPreco());
-            produtoDb.setEstoque(produto.getEstoque());
-            produtoDb.setImagem(produto.getImagem());
-            produtoDb.setMarca(produto.getMarca());
-            produtoDb.setModelo(produto.getModelo());
-            produtoDb.setDestaque(produto.getDestaque());
-            
-            // Atualizar categoria se fornecida
-            if (produto.getCategoria() != null && produto.getCategoria().id != null) {
-                Categoria categoria = Categoria.findById(produto.getCategoria().id);
-                if (categoria != null) {
-                    produtoDb.setCategoria(categoria);
-                }
+            Produto produto = produtoOpt.get();
+
+            // Busca a Categoria pelo ID
+            Categoria categoria = Categoria.findById(dto.getIdCategoria());
+            if (categoria == null) {
+                throw new WebApplicationException("Categoria com id " + dto.getIdCategoria() + " não encontrada.", 404);
             }
+
+            // Atualiza os campos do produto com os dados do DTO
+            produto.setNome(dto.getNome());
+            produto.setDescricao(dto.getDescricao());
+            produto.setPreco(dto.getPreco());
+            produto.setEstoque(dto.getEstoque());
+            produto.setImagem(dto.getImagem());
+            produto.setMarca(dto.getMarca());
+            produto.setModelo(dto.getModelo());
+            produto.setDestaque(dto.isDestaque());
+            produto.setCategoria(categoria);
             
-            produtoDb.persist();
-            return Optional.of(produtoDb);
+            return Optional.of(produto);
         }
-        
         return Optional.empty();
     }
 
+    @Transactional
     public boolean deletar(Long id) {
         return Produto.deleteById(id);
     }
-
-	public void criar(Produto produto) {
-		
-	}
 }
