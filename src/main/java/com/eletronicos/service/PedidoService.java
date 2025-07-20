@@ -17,7 +17,8 @@ public class PedidoService {
         return Pedido.listAll();
     }
 
-    public List<Pedido> listarPedidosDoUsuario(String email) {
+    // MUDANÇA: Renomeado para corresponder ao que o PedidoResource chama
+    public List<Pedido> listarPorUsuario(String email) {
         Usuario usuario = Usuario.find("email", email).firstResult();
         return Pedido.list("usuario", usuario);
     }
@@ -77,7 +78,7 @@ public class PedidoService {
         if (pedidoOpt.isPresent()) {
             Pedido pedido = pedidoOpt.get();
             pedido.setStatus(novoStatus);
-            pedido.persist();
+            // O persist() não é necessário aqui, pois a entidade já está gerenciada
             return Optional.of(pedido);
         }
         
