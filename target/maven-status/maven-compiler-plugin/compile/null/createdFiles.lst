@@ -1,4 +1,5 @@
 com/eletronicos/model/ProdutoDTO.class
+com/eletronicos/model/CategoriaFormDTO.class
 com/eletronicos/resource/CarrinhoResource.class
 com/eletronicos/resource/PedidoResource.class
 com/eletronicos/service/DataInitializationService.class

@@ -1,6 +1,7 @@
 package com.eletronicos.service;
 
 import com.eletronicos.model.Categoria;
+import com.eletronicos.model.CategoriaFormDTO; 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -18,19 +19,25 @@ public class CategoriaService {
     }
 
     @Transactional
-    public void criar(Categoria categoria) { // <-- Renomeado de "salvar" para "criar"
+    public Categoria criar(CategoriaFormDTO dto) {
+        Categoria categoria = new Categoria();
+        categoria.setNome(dto.getNome());
+        categoria.setDescricao(dto.getDescricao());
+        categoria.setIcone(dto.getIcone());
         categoria.persist();
+        return categoria;
     }
 
     @Transactional
-    public Optional<Categoria> atualizar(Long id, Categoria categoria) {
+    public Optional<Categoria> atualizar(Long id, CategoriaFormDTO dto) {
         Optional<Categoria> categoriaOpt = buscarPorId(id);
         
         if (categoriaOpt.isPresent()) {
             Categoria categoriaDb = categoriaOpt.get();
-            categoriaDb.setNome(categoria.getNome());
-            categoriaDb.setDescricao(categoria.getDescricao());
-            categoriaDb.setIcone(categoria.getIcone());
+            categoriaDb.setNome(dto.getNome());
+            categoriaDb.setDescricao(dto.getDescricao());
+            categoriaDb.setIcone(dto.getIcone());
+            // O método persist() não é necessário aqui, pois a entidade já está gerenciada
             return Optional.of(categoriaDb);
         }
         
