@@ -28,7 +28,6 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
-    <!-- Dependências do Quarkus -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive</artifactId>
@@ -53,30 +52,22 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
     </dependency>
+    <!-- DEPENDÊNCIAS DE SEGURANÇA REMOVIDAS -->
+    <!-- 
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-jwt</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-jwt-build</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-security-jpa</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-devservices-h2</artifactId>
-    </dependency>
-
-    <!--  NOVA DEPENDÊNCIA PARA SENHAS -->
+    -->
     <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
       <version>0.4</version>
     </dependency>
-    
   </dependencies>
   <build>
     <plugins>
