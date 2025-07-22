@@ -1,7 +1,7 @@
 package com.eletronicos.resource;
 
 import com.eletronicos.model.Usuario;
-import io.smallrye.jwt.build.Jwt;
+import org.mindrot.jbcrypt.BCrypt; 
 import javax.annotation.security.PermitAll;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -10,18 +10,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.mindrot.jbcrypt.BCrypt; // <-- MUDANÇA: Import da nova biblioteca
-
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashSet;
 
 @Path("/api/auth")
 public class AuthResource {
-
-    @ConfigProperty(name = "mp.jwt.verify.issuer")
-    String issuer;
 
     @POST
     @Path("/login")
@@ -31,38 +22,32 @@ public class AuthResource {
     @Transactional
     public Response login(LoginRequest loginRequest) {
         Usuario usuario = Usuario.find("email", loginRequest.email).firstResult();
-
-        // <-- MUDANÇA: Trocamos BcryptUtil.matches por BCrypt.checkpw
+        
+        // A verificação da senha continua a usar o jbcrypt
         if (usuario == null || !BCrypt.checkpw(loginRequest.senha, usuario.getSenha())) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity("E-mail ou senha inválidos.").build();
         }
-
-        String token = generateToken(usuario.getEmail(), usuario.getPapel(), 24 * 60 * 60); // 24 horas
-
-        return Response.ok(new TokenResponse(token, usuario.getNome(), usuario.getPapel())).build();
+        
+        // Se o login for bem-sucedido, retorna os dados do utilizador
+        // O frontend usará isto para saber que o login foi um sucesso
+        return Response.ok(new UserInfoResponse(usuario.getNome(), usuario.getEmail(), usuario.getPapel())).build();
     }
-
-    private String generateToken(String email, String role, long duration) {
-        return Jwt.issuer(issuer)
-                .subject(email)
-                .groups(new HashSet<>(Arrays.asList(role)))
-                .expiresIn(Duration.ofSeconds(duration))
-                .sign();
-    }
-
+    
+    // DTO para receber os dados de login do frontend
     public static class LoginRequest {
         public String email;
         public String senha;
     }
-
-    public static class TokenResponse {
-        public String token;
+    
+    // DTO para enviar os dados do utilizador para o frontend após o login
+    public static class UserInfoResponse {
         public String nome;
+        public String email;
         public String papel;
-
-        public TokenResponse(String token, String nome, String papel) {
-            this.token = token;
+        
+        public UserInfoResponse(String nome, String email, String papel) {
             this.nome = nome;
+            this.email = email;
             this.papel = papel;
         }
     }

@@ -1,10 +1,12 @@
 package com.eletronicos.service;
 
+import com.eletronicos.bo.ProdutoBO;
 import com.eletronicos.model.Categoria;
 import com.eletronicos.model.Produto;
-import com.eletronicos.model.ProdutoFormDTO; 
+import com.eletronicos.model.ProdutoFormDTO;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
 import java.util.List;
@@ -12,6 +14,9 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class ProdutoService {
+
+    @Inject
+    ProdutoBO produtoBO; // Injeta o nosso novo Business Object
 
     public List<Produto> listarTodos() {
         return Produto.listAll();
@@ -27,32 +32,22 @@ public class ProdutoService {
 
     @Transactional
     public Produto criar(ProdutoFormDTO dto) {
-        // 1. Busca a Categoria pelo ID fornecido no DTO
-        Categoria categoria = Categoria.findById(dto.getIdCategoria());
-        if (categoria == null) {
-            // Lança uma exceção se a categoria não for encontrada
-            throw new WebApplicationException("Categoria com id " + dto.getIdCategoria() + " não encontrada.", 404);
-        }
+        // 1. Delega a validação para o BO
+        produtoBO.validarNovoProduto(dto);
 
-        // 2. Cria a nova entidade Produto a partir dos dados do DTO
-        Produto produto = new Produto();
-        produto.setNome(dto.getNome());
-        produto.setDescricao(dto.getDescricao());
-        produto.setPreco(dto.getPreco());
-        produto.setEstoque(dto.getEstoque());
-        produto.setImagem(dto.getImagem());
-        produto.setMarca(dto.getMarca());
-        produto.setModelo(dto.getModelo());
-        produto.setDestaque(dto.isDestaque());
-        produto.setCategoria(categoria);
+        // 2. Delega a construção do objeto para o BO
+        Produto produto = produtoBO.construirProduto(dto);
 
-        // 3. Persiste o novo produto no banco de dados
+        // 3. O Service agora só se preocupa com a persistência
         produto.persist();
         return produto;
     }
 
     @Transactional
     public Optional<Produto> atualizar(Long id, ProdutoFormDTO dto) {
+        // 1. Delega a validação para o BO
+        produtoBO.validarAtualizacaoProduto(dto);
+
         Optional<Produto> produtoOpt = buscarPorId(id);
         if (produtoOpt.isPresent()) {
             Produto produto = produtoOpt.get();

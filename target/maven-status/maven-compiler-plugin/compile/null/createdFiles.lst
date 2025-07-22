@@ -15,7 +15,6 @@ com/eletronicos/resource/CarrinhoResource$ProdutoEstoqueResponse.class
 com/eletronicos/resource/AuthResource.class
 com/eletronicos/service/UsuarioService.class
 com/eletronicos/service/CategoriaService.class
-com/eletronicos/resource/AuthResource$TokenResponse.class
 com/eletronicos/model/Produto.class
 com/eletronicos/resource/UsuarioResource.class
 com/eletronicos/model/CategoriaDTO.class
@@ -23,9 +22,13 @@ com/eletronicos/model/Usuario.class
 com/eletronicos/service/PedidoService.class
 com/eletronicos/resource/CategoriaResource.class
 META-INF/panache-archive.marker
+com/eletronicos/bo/ProdutoBO.class
 com/eletronicos/model/Pedido.class
+com/eletronicos/model/ItemPedidoFormDTO.class
 com/eletronicos/model/PedidoDTO.class
 com/eletronicos/model/StatusPedido.class
+com/eletronicos/model/PedidoFormDTO.class
 com/eletronicos/resource/CarrinhoResource$ItemCarrinho.class
 com/eletronicos/resource/CarrinhoResource$ItemCarrinhoResponse.class
 com/eletronicos/bo/UsuarioBO.class
+com/eletronicos/resource/AuthResource$UserInfoResponse.class

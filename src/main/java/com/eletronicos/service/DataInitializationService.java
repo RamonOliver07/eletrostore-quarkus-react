@@ -1,15 +1,14 @@
 package com.eletronicos.service;
 
-import com.eletronicos.model.Categoria;
-import com.eletronicos.model.Produto;
-import com.eletronicos.model.Usuario;
-import io.quarkus.runtime.StartupEvent;
-import org.mindrot.jbcrypt.BCrypt; // Import da biblioteca correta
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
+
+import org.mindrot.jbcrypt.BCrypt; // Import da biblioteca correta
+
+import com.eletronicos.model.Usuario;
+
+import io.quarkus.runtime.StartupEvent;
 
 @ApplicationScoped
 public class DataInitializationService {

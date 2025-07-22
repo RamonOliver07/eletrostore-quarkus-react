@@ -1,10 +1,7 @@
 package com.eletronicos.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.security.jpa.Password;
-import io.quarkus.security.jpa.Roles;
-import io.quarkus.security.jpa.UserDefinition;
-import io.quarkus.security.jpa.Username;
+// Imports de segurança do Quarkus foram removidos
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -15,19 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@UserDefinition
+// @UserDefinition foi removido
 public class Usuario extends PanacheEntity {
 
-    @Username
+    // @Username foi removido
     @Email(message = "O email deve ser válido")
     @NotBlank(message = "O email é obrigatório")
     @Column(unique = true)
     private String email;
 
-    @Password
+    // @Password foi removido
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
-    private String senha; // <-- A DECLARAÇÃO ESTÁ AQUI
+    private String senha;
 
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
@@ -38,13 +35,13 @@ public class Usuario extends PanacheEntity {
     private String estado;
     private String cep;
 
-    @Roles
-    private String papel = "usuario";
+    // @Roles foi removido
+    private String papel = "usuario"; // A lógica de papéis será manual
 
     @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos = new ArrayList<>();
 
-    // Getters e Setters
+    // Getters e Setters (continuam iguais)
     public String getEmail() {
         return email;
     }
