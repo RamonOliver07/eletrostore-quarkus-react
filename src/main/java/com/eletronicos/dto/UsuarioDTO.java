@@ -1,4 +1,4 @@
-package com.eletronicos.model;
+package com.eletronicos.dto;
 
 public class UsuarioDTO {
     private String nome;

@@ -1,8 +1,8 @@
 package com.eletronicos.bo;
 
+import com.eletronicos.formdto.ProdutoFormDTO;
 import com.eletronicos.model.Categoria;
 import com.eletronicos.model.Produto;
-import com.eletronicos.model.ProdutoFormDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.WebApplicationException;

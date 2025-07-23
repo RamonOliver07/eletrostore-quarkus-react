@@ -1,7 +1,7 @@
 package com.eletronicos.resource;
 
+import com.eletronicos.dto.UsuarioDTO;
 import com.eletronicos.model.Usuario;
-import com.eletronicos.model.UsuarioDTO;
 import com.eletronicos.service.UsuarioService;
 import org.mindrot.jbcrypt.BCrypt;
 

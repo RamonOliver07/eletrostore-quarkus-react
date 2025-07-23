@@ -1,45 +1,40 @@
-package com.eletronicos.model;
+package com.eletronicos.dto;
 
+import com.eletronicos.model.Pedido; // <-- IMPORT CORRIGIDO
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * DTO (Data Transfer Object) para a entidade Pedido.
- */
 public class PedidoDTO {
 
     private Long id;
     private LocalDateTime dataPedido;
     private BigDecimal valorTotal;
     private String status;
-    private String nomeUsuario; // Apenas o nome do usuário, não o objeto inteiro
-    private List<ItemPedidoDTO> itens; // Usará um DTO para os itens também
+    private String nomeUsuario;
+    private List<ItemPedidoDTO> itens;
 
-    // Construtor vazio
     public PedidoDTO() {
     }
 
-    // Construtor para converter a Entidade em DTO
     public PedidoDTO(Pedido pedido) {
         this.id = pedido.id;
         this.dataPedido = pedido.getDataPedido();
         this.valorTotal = pedido.getValorTotal();
-        // CORREÇÃO: Converte o Enum StatusPedido para uma String
         if (pedido.getStatus() != null) {
             this.status = pedido.getStatus().name();
         }
         if (pedido.getUsuario() != null) {
             this.nomeUsuario = pedido.getUsuario().getNome();
         }
-        // Converte a lista de entidades ItemPedido para uma lista de ItemPedidoDTO
         if (pedido.getItens() != null) {
             this.itens = pedido.getItens().stream()
                             .map(ItemPedidoDTO::new)
                             .collect(Collectors.toList());
         }
     }
+
 
     // Getters e Setters
     public Long getId() {

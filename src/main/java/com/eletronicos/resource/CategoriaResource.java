@@ -1,8 +1,8 @@
 package com.eletronicos.resource;
 
+import com.eletronicos.dto.CategoriaDTO;
+import com.eletronicos.formdto.CategoriaFormDTO;
 import com.eletronicos.model.Categoria;
-import com.eletronicos.model.CategoriaDTO;
-import com.eletronicos.model.CategoriaFormDTO; 
 import com.eletronicos.service.CategoriaService;
 
 import javax.inject.Inject;
@@ -54,7 +54,7 @@ public class CategoriaResource {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response atualizar(@PathParam("id") Long id, CategoriaFormDTO dto) { 
+    public Response atualizar(@PathParam("id") Long id, CategoriaFormDTO dto) { // <-- MUDANÇA: Recebe o DTO do formulário
         Optional<Categoria> categoriaAtualizada = categoriaService.atualizar(id, dto);
         if (categoriaAtualizada.isPresent()) {
             // Retorna o DTO de visualização, não a entidade

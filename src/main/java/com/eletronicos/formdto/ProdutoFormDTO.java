@@ -1,14 +1,12 @@
-package com.eletronicos.model;
+package com.eletronicos.formdto;
 
 import java.math.BigDecimal;
 
 /**
- * DTO (Data Transfer Object) para a entidade Produto.
- * Usado para transferir dados de produtos de forma segura para o frontend.
+ * DTO (Data Transfer Object) para receber dados do formulário de criação/edição de Produto.
  */
-public class ProdutoDTO {
+public class ProdutoFormDTO {
 
-    private Long id;
     private String nome;
     private String descricao;
     private BigDecimal preco;
@@ -17,37 +15,9 @@ public class ProdutoDTO {
     private String marca;
     private String modelo;
     private boolean destaque;
-    private String nomeCategoria; // Apenas o nome da categoria, para simplificar
-
-    // Construtor vazio é necessário para frameworks como o Jackson
-    public ProdutoDTO() {
-    }
-
-    // Construtor para facilitar a conversão da Entidade para DTO
-    public ProdutoDTO(Produto produto) {
-        this.id = produto.id;
-        this.nome = produto.getNome();
-        this.descricao = produto.getDescricao();
-        this.preco = produto.getPreco();
-        this.estoque = produto.getEstoque();
-        this.imagem = produto.getImagem();
-        this.marca = produto.getMarca();
-        this.modelo = produto.getModelo();
-        this.destaque = produto.getDestaque();
-        if (produto.getCategoria() != null) {
-            this.nomeCategoria = produto.getCategoria().getNome();
-        }
-    }
+    private Long idCategoria; // Apenas o ID da categoria, para simplificar
 
     // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNome() {
         return nome;
     }
@@ -112,11 +82,11 @@ public class ProdutoDTO {
         this.destaque = destaque;
     }
 
-    public String getNomeCategoria() {
-        return nomeCategoria;
+    public Long getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setNomeCategoria(String nomeCategoria) {
-        this.nomeCategoria = nomeCategoria;
+    public void setIdCategoria(Long idCategoria) {
+        this.idCategoria = idCategoria;
     }
 }

@@ -1,12 +1,11 @@
-package com.eletronicos.model;
+package com.eletronicos.dto;
 
+import com.eletronicos.model.Produto; // <-- IMPORT ADICIONADO
 import java.math.BigDecimal;
 
-/**
- * DTO (Data Transfer Object) para receber dados do formulário de criação/edição de Produto.
- */
-public class ProdutoFormDTO {
+public class ProdutoDTO {
 
+    private Long id;
     private String nome;
     private String descricao;
     private BigDecimal preco;
@@ -15,9 +14,35 @@ public class ProdutoFormDTO {
     private String marca;
     private String modelo;
     private boolean destaque;
-    private Long idCategoria; // Apenas o ID da categoria, para simplificar
+    private String nomeCategoria;
 
-    // Getters e Setters
+    public ProdutoDTO() {
+    }
+
+    public ProdutoDTO(Produto produto) {
+        this.id = produto.id;
+        this.nome = produto.getNome();
+        this.descricao = produto.getDescricao();
+        this.preco = produto.getPreco();
+        this.estoque = produto.getEstoque();
+        this.imagem = produto.getImagem();
+        this.marca = produto.getMarca();
+        this.modelo = produto.getModelo();
+        this.destaque = produto.getDestaque();
+        if (produto.getCategoria() != null) {
+            this.nomeCategoria = produto.getCategoria().getNome();
+        }
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -82,11 +107,11 @@ public class ProdutoFormDTO {
         this.destaque = destaque;
     }
 
-    public Long getIdCategoria() {
-        return idCategoria;
+    public String getNomeCategoria() {
+        return nomeCategoria;
     }
 
-    public void setIdCategoria(Long idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
     }
 }

@@ -1,74 +1,53 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Eye } from 'lucide-react';
+import axios from 'axios'; // Importa o axios para fazer chamadas de API
 
+// A interface agora corresponde ao nosso ProdutoDTO do backend
 interface Product {
   id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
+  nome: string;
+  preco: number;
+  imagem: string;
+  descricao: string;
 }
 
 function Products() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulated products data
-    const demoProducts = [
-      {
-        id: 1,
-        name: "Smartphone Galaxy S23",
-        price: 4999.99,
-        image: "https://images.pexels.com/photos/47261/pexels-photo-47261.jpeg",
-        description: "O mais recente smartphone Samsung com câmera incrível"
-      },
-      {
-        id: 2,
-        name: "MacBook Pro M2",
-        price: 9999.99,
-        image: "https://images.pexels.com/photos/812264/pexels-photo-812264.jpeg",
-        description: "Notebook potente com o novo chip M2"
-      },
-      {
-        id: 3,
-        name: "Fones Bluetooth",
-        price: 299.99,
-        image: "https://images.pexels.com/photos/3394665/pexels-photo-3394665.jpeg",
-        description: "Fones sem fio com qualidade excepcional"
-      },
-      {
-        id: 4,
-        name: "Smart TV 55\"",
-        price: 3499.99,
-        image: "https://images.pexels.com/photos/6782581/pexels-photo-6782581.jpeg",
-        description: "TV 4K com tecnologia Smart"
+    // Função para buscar os produtos da nossa API Quarkus
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        // Faz a chamada GET para o endpoint que já refatorámos
+        const response = await axios.get('/api/produtos');
+        setProducts(response.data);
+        setError(null);
+      } catch (err) {
+        console.error("Erro ao buscar produtos:", err);
+        setError("Não foi possível carregar os produtos.");
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    setProducts(demoProducts);
+    fetchProducts();
   }, []);
 
   const addToCart = (product: Product) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
-    const existingItem = cart.find((item: any) => item.id === product.id);
-    
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        quantity: 1
-      });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Produto adicionado ao carrinho!');
+    // A lógica do carrinho pode ser melhorada depois
+    alert(`Produto "${product.nome}" adicionado ao carrinho!`);
   };
+
+  if (loading) {
+    return <div className="text-center py-12">A carregar produtos...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-12 text-red-500">{error}</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -76,25 +55,28 @@ function Products() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {products.map(product => (
-          <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="aspect-square overflow-hidden">
+          <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden group flex flex-col">
+            {/* --- CORREÇÃO DE ESTILO AQUI --- */}
+            <div className="relative w-full h-64 overflow-hidden">
               <img 
-                src={product.image} 
-                alt={product.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform"
+                src={product.imagem} 
+                alt={product.nome}
+                className="absolute top-0 left-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                // Adiciona um fallback para imagens quebradas
+                onError={(e) => { e.currentTarget.src = 'https://placehold.co/400x400/cccccc/ffffff?text=Imagem+Indisponível'; }}
               />
             </div>
             
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-              <p className="text-gray-600 mb-4">{product.description}</p>
+            <div className="p-4 flex flex-col flex-grow">
+              <h2 className="text-xl font-semibold mb-2 truncate">{product.nome}</h2>
+              <p className="text-gray-600 mb-4 flex-grow">{product.descricao}</p>
               
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mt-auto">
                 <span className="text-2xl font-bold text-blue-600">
                   {new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
-                  }).format(product.price)}
+                  }).format(product.preco)}
                 </span>
                 
                 <div className="flex gap-2">

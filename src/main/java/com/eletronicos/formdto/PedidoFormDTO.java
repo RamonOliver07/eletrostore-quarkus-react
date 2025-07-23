@@ -1,4 +1,4 @@
-package com.eletronicos.model;
+package com.eletronicos.formdto;
 
 import java.util.List;
 

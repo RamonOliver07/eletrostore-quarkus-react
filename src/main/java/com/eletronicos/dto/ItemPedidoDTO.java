@@ -1,21 +1,17 @@
-package com.eletronicos.model;
+package com.eletronicos.dto;
 
+import com.eletronicos.model.ItemPedido; // <-- IMPORT CORRIGIDO
 import java.math.BigDecimal;
 
-/**
- * DTO (Data Transfer Object) para a entidade ItemPedido.
- */
 public class ItemPedidoDTO {
 
     private String nomeProduto;
     private int quantidade;
     private BigDecimal precoUnitario;
 
-    // Construtor vazio
     public ItemPedidoDTO() {
     }
 
-    // Construtor para converter a Entidade em DTO
     public ItemPedidoDTO(ItemPedido itemPedido) {
         if (itemPedido.getProduto() != null) {
             this.nomeProduto = itemPedido.getProduto().getNome();
@@ -23,6 +19,7 @@ public class ItemPedidoDTO {
         this.quantidade = itemPedido.getQuantidade();
         this.precoUnitario = itemPedido.getPrecoUnitario();
     }
+    
 
     // Getters e Setters
     public String getNomeProduto() {

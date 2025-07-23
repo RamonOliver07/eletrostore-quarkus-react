@@ -1,4 +1,4 @@
-package com.eletronicos.model;
+package com.eletronicos.formdto;
 
 /**
  * DTO (Data Transfer Object) para receber dados do formulário de criação/edição de Categoria.

@@ -1,14 +1,20 @@
 package com.eletronicos.service;
 
+import com.eletronicos.bo.CategoriaBO;
+import com.eletronicos.formdto.CategoriaFormDTO;
 import com.eletronicos.model.Categoria;
-import com.eletronicos.model.CategoriaFormDTO; 
+
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
 public class CategoriaService {
+
+    @Inject
+    CategoriaBO categoriaBO; 
 
     public List<Categoria> listarTodas() {
         return Categoria.listAll();
@@ -20,24 +26,30 @@ public class CategoriaService {
 
     @Transactional
     public Categoria criar(CategoriaFormDTO dto) {
-        Categoria categoria = new Categoria();
-        categoria.setNome(dto.getNome());
-        categoria.setDescricao(dto.getDescricao());
-        categoria.setIcone(dto.getIcone());
+        // 1. Delega a validação para o BO
+        categoriaBO.validarNovaCategoria(dto);
+
+        // 2. Delega a construção do objeto para o BO
+        Categoria categoria = categoriaBO.construirCategoria(dto);
+
+        // 3. O Service agora só se preocupa com a persistência
         categoria.persist();
         return categoria;
     }
 
     @Transactional
     public Optional<Categoria> atualizar(Long id, CategoriaFormDTO dto) {
+        // 1. Delega a validação para o BO
+        categoriaBO.validarNovaCategoria(dto); // Reutiliza a mesma validação
+
         Optional<Categoria> categoriaOpt = buscarPorId(id);
         
         if (categoriaOpt.isPresent()) {
             Categoria categoriaDb = categoriaOpt.get();
-            categoriaDb.setNome(dto.getNome());
-            categoriaDb.setDescricao(dto.getDescricao());
-            categoriaDb.setIcone(dto.getIcone());
-            // O método persist() não é necessário aqui, pois a entidade já está gerenciada
+            
+            // 2. Delega a atualização dos dados para o BO
+            categoriaBO.atualizarDadosCategoria(categoriaDb, dto);
+            
             return Optional.of(categoriaDb);
         }
         

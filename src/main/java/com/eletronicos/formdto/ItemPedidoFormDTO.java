@@ -1,4 +1,4 @@
-package com.eletronicos.model;
+package com.eletronicos.formdto;
 
 /**
  * DTO (Data Transfer Object) para receber dados de um item de pedido

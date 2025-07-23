@@ -1,8 +1,8 @@
 package com.eletronicos.resource;
 
 import com.eletronicos.model.Produto;
-import com.eletronicos.model.ProdutoDTO;
-import com.eletronicos.model.ProdutoFormDTO; // <-- Importa o DTO de formulário
+import com.eletronicos.dto.ProdutoDTO;
+import com.eletronicos.formdto.ProdutoFormDTO;
 import com.eletronicos.service.ProdutoService;
 
 import javax.inject.Inject;
@@ -26,7 +26,7 @@ public class ProdutoResource {
     public List<ProdutoDTO> listarTodos() {
         List<Produto> produtos = produtoService.listarTodos();
         return produtos.stream()
-                .map(ProdutoDTO::new)
+                .map(produto -> new ProdutoDTO(produto))
                 .collect(Collectors.toList());
     }
 
@@ -43,25 +43,23 @@ public class ProdutoResource {
     public List<ProdutoDTO> listarDestaques() {
         List<Produto> produtos = produtoService.listarDestaques();
         return produtos.stream()
-                .map(ProdutoDTO::new)
+                .map(produto -> new ProdutoDTO(produto))
                 .collect(Collectors.toList());
     }
 
     @POST
     @Transactional
-    public Response criar(ProdutoFormDTO dto) { // <-- MUDANÇA: Recebe o DTO do formulário
+    public Response criar(ProdutoFormDTO dto) {
         Produto produtoCriado = produtoService.criar(dto);
-        // Retorna o DTO de visualização, não a entidade
         return Response.status(Response.Status.CREATED).entity(new ProdutoDTO(produtoCriado)).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response atualizar(@PathParam("id") Long id, ProdutoFormDTO dto) { // <-- MUDANÇA: Recebe o DTO do formulário
+    public Response atualizar(@PathParam("id") Long id, ProdutoFormDTO dto) {
         Optional<Produto> produtoAtualizado = produtoService.atualizar(id, dto);
         if (produtoAtualizado.isPresent()) {
-            // Retorna o DTO de visualização, não a entidade
             return Response.ok(new ProdutoDTO(produtoAtualizado.get())).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

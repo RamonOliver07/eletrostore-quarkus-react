@@ -1,4 +1,6 @@
-package com.eletronicos.model;
+package com.eletronicos.dto;
+
+import com.eletronicos.model.Categoria;
 
 /**
  * DTO (Data Transfer Object) para a entidade Categoria.

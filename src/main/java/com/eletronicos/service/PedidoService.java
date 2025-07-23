@@ -1,20 +1,16 @@
 package com.eletronicos.service;
 
-import com.eletronicos.model.ItemPedido;
+import com.eletronicos.bo.PedidoBO;
+import com.eletronicos.formdto.PedidoFormDTO;
 import com.eletronicos.model.Pedido;
-import com.eletronicos.model.Produto;
 import com.eletronicos.model.StatusPedido;
 import com.eletronicos.model.Usuario;
-import com.eletronicos.model.PedidoFormDTO;
-import com.eletronicos.model.ItemPedidoFormDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,14 +20,16 @@ public class PedidoService {
     @Inject
     EntityManager em;
 
+    @Inject
+    PedidoBO pedidoBO; // Injeta o Business Object
+
     public List<Pedido> listarPorUsuario(String email) {
         Usuario usuario = Usuario.find("email", email).firstResult();
         return Pedido.list("usuario", usuario);
     }
-
-    // MÉTODO ADICIONADO QUE ESTAVA EM FALTA
+    
     public Optional<Pedido> buscarPorId(Long id) {
-        return Optional.ofNullable(Pedido.findById(id));
+        return Pedido.findByIdOptional(id);
     }
 
     public Optional<Pedido> buscarPorIdEUsuario(Long id, String email) {
@@ -43,38 +41,17 @@ public class PedidoService {
         return Optional.ofNullable(pedido);
     }
 
+    // --- MÉTODO ADICIONADO QUE ESTAVA EM FALTA ---
     @Transactional
     public Pedido criarPedido(PedidoFormDTO dto, String emailUsuario) {
+        // 1. Busca o utilizador
         Usuario usuario = Usuario.<Usuario>find("email", emailUsuario).firstResultOptional()
-                .orElseThrow(() -> new WebApplicationException("Usuário não encontrado", 404));
+                .orElseThrow(() -> new WebApplicationException("Utilizador não encontrado", 404));
 
-        Pedido pedido = new Pedido();
-        pedido.setUsuario(usuario);
-        pedido.setDataPedido(LocalDateTime.now());
-        pedido.setStatus(StatusPedido.PROCESSANDO);
-        pedido.setMetodoPagamento(dto.getMetodoPagamento());
-        pedido.setItens(new ArrayList<>());
+        // 2. Delega a validação e a construção para o BO
+        Pedido pedido = pedidoBO.construirPedido(dto, usuario);
 
-        for (ItemPedidoFormDTO itemDTO : dto.getItens()) {
-            Produto produto = Produto.<Produto>findByIdOptional(itemDTO.getProdutoId())
-                    .orElseThrow(() -> new WebApplicationException("Produto com id " + itemDTO.getProdutoId() + " não encontrado.", 404));
-
-            if (produto.getEstoque() < itemDTO.getQuantidade()) {
-                throw new WebApplicationException("Estoque insuficiente para o produto: " + produto.getNome(), 400);
-            }
-
-            produto.setEstoque(produto.getEstoque() - itemDTO.getQuantidade());
-
-            ItemPedido itemPedido = new ItemPedido();
-            itemPedido.setProduto(produto);
-            itemPedido.setQuantidade(itemDTO.getQuantidade());
-            itemPedido.setPrecoUnitario(produto.getPreco());
-            itemPedido.setPedido(pedido);
-            pedido.getItens().add(itemPedido);
-        }
-
-        pedido.calcularTotal();
-        
+        // 3. O Service agora só se preocupa com a persistência
         em.persist(pedido);
         
         return pedido;
