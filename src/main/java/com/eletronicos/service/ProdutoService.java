@@ -1,9 +1,9 @@
 package com.eletronicos.service;
 
 import com.eletronicos.bo.ProdutoBO;
-import com.eletronicos.formdto.ProdutoFormDTO;
 import com.eletronicos.model.Categoria;
 import com.eletronicos.model.Produto;
+import com.eletronicos.formdto.ProdutoFormDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

@@ -10,10 +10,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Service para a entidade Usuario.
- * Orquestra as ações, delegando as regras de negócio para o UsuarioBO.
- */
 @ApplicationScoped
 public class UsuarioService {
 
@@ -21,14 +17,10 @@ public class UsuarioService {
     EntityManager em;
 
     @Inject
-    UsuarioBO usuarioBO; // <-- Injeta o nosso novo Business Object
+    UsuarioBO usuarioBO;
 
     public List<Usuario> listarTodos() {
         return Usuario.listAll();
-    }
-
-    public Optional<Usuario> buscarPorId(Long id) {
-        return Optional.ofNullable(Usuario.findById(id));
     }
 
     public Optional<Usuario> buscarPorEmail(String email) {
@@ -37,17 +29,13 @@ public class UsuarioService {
 
     @Transactional
     public void cadastrar(Usuario usuario) {
+        // --- CORREÇÃO AQUI ---
         // 1. Delega a validação para o BO
         usuarioBO.validarNovoUsuario(usuario);
         
         // 2. Delega a criptografia para o BO
-        String senhaCriptografada = usuarioBO.criptografarSenha(usuario.getSenha());
-        usuario.setSenha(senhaCriptografada);
-        
-        // Define o papel padrão
-        if (usuario.getPapel() == null) {
-            usuario.setPapel("usuario");
-        }
+        String senhaCriptografada = usuarioBO.criptografarSenha(usuario.getHashSenha());
+        usuario.setHashSenha(senhaCriptografada);
         
         // 3. O Service agora só se preocupa com a persistência
         em.persist(usuario);
@@ -60,21 +48,16 @@ public class UsuarioService {
         if (usuarioOpt.isPresent()) {
             Usuario usuarioDb = usuarioOpt.get();
             
-            // Atualiza os campos
             usuarioDb.setNome(usuario.getNome());
             usuarioDb.setTelefone(usuario.getTelefone());
-            usuarioDb.setEndereco(usuario.getEndereco());
-            usuarioDb.setCidade(usuario.getCidade());
-            usuarioDb.setEstado(usuario.getEstado());
-            usuarioDb.setCep(usuario.getCep());
+            // ... outros campos ...
             
-            // Se a senha foi fornecida, criptografa usando o BO
-            if (usuario.getSenha() != null && !usuario.getSenha().isEmpty()) {
-                String senhaCriptografada = usuarioBO.criptografarSenha(usuario.getSenha());
-                usuarioDb.setSenha(senhaCriptografada);
+            // --- CORREÇÃO AQUI ---
+            if (usuario.getHashSenha() != null && !usuario.getHashSenha().isEmpty()) {
+                String senhaCriptografada = usuarioBO.criptografarSenha(usuario.getHashSenha());
+                usuarioDb.setHashSenha(senhaCriptografada);
             }
             
-            em.merge(usuarioDb);
             return Optional.of(usuarioDb);
         }
         

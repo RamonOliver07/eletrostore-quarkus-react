@@ -1,7 +1,8 @@
 package com.eletronicos.resource;
 
-import com.eletronicos.dto.UsuarioDTO;
 import com.eletronicos.model.Usuario;
+import com.eletronicos.dto.UsuarioDTO;
+import com.eletronicos.formdto.UsuarioFormDTO;
 import com.eletronicos.service.UsuarioService;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -13,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/api/usuarios")
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,7 +30,7 @@ public class UsuarioResource {
     @POST
     @Path("/cadastro")
     @Transactional
-    public Response cadastrar(@Valid UsuarioDTO usuarioDTO) {
+    public Response cadastrar(@Valid UsuarioFormDTO usuarioDTO) {
         try {
             // Validação manual
             if (usuarioDTO.getSenha() == null || usuarioDTO.getSenha().isBlank()) {
@@ -45,15 +47,14 @@ public class UsuarioResource {
             Usuario novoUsuario = new Usuario();
             novoUsuario.setNome(usuarioDTO.getNome());
             novoUsuario.setEmail(usuarioDTO.getEmail());
-            novoUsuario.setSenha(senhaCriptografada);
+            novoUsuario.setHashSenha(senhaCriptografada);
             novoUsuario.setPapel("usuario");
 
             // Persistência
             em.persist(novoUsuario);
 
-            // Retorno seguro
-            novoUsuario.setSenha(null);
-            return Response.status(Response.Status.CREATED).entity(novoUsuario).build();
+            // Retorno seguro com DTO de visualização
+            return Response.status(Response.Status.CREATED).entity(new UsuarioDTO(novoUsuario)).build();
 
         } catch (WebApplicationException e) {
             return Response.status(e.getResponse().getStatus()).entity(e.getMessage()).build();
@@ -66,11 +67,12 @@ public class UsuarioResource {
 
     @GET
     @Path("/todos")
-    public List<Usuario> listarTodos() {
+    public List<UsuarioDTO> listarTodos() {
         List<Usuario> usuarios = usuarioService.listarTodos();
-        // Remover senhas por segurança
-        usuarios.forEach(u -> u.setSenha(null));
-        return usuarios;
+        // Converte a lista de entidades para uma lista de DTOs
+        return usuarios.stream()
+                       .map(UsuarioDTO::new)
+                       .collect(Collectors.toList());
     }
 
     // Os métodos de perfil (obterPerfil, atualizarPerfil) foram removidos temporariamente

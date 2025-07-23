@@ -1,8 +1,8 @@
 package com.eletronicos.service;
 
 import com.eletronicos.bo.PedidoBO;
-import com.eletronicos.formdto.PedidoFormDTO;
 import com.eletronicos.model.Pedido;
+import com.eletronicos.formdto.PedidoFormDTO;
 import com.eletronicos.model.StatusPedido;
 import com.eletronicos.model.Usuario;
 
@@ -21,7 +21,7 @@ public class PedidoService {
     EntityManager em;
 
     @Inject
-    PedidoBO pedidoBO; // Injeta o Business Object
+    PedidoBO pedidoBO; 
 
     public List<Pedido> listarPorUsuario(String email) {
         Usuario usuario = Usuario.find("email", email).firstResult();
@@ -41,10 +41,9 @@ public class PedidoService {
         return Optional.ofNullable(pedido);
     }
 
-    // --- MÉTODO ADICIONADO QUE ESTAVA EM FALTA ---
     @Transactional
     public Pedido criarPedido(PedidoFormDTO dto, String emailUsuario) {
-        // 1. Busca o utilizador
+        // 1. Busca o utilizador (orquestração de dados)
         Usuario usuario = Usuario.<Usuario>find("email", emailUsuario).firstResultOptional()
                 .orElseThrow(() -> new WebApplicationException("Utilizador não encontrado", 404));
 
