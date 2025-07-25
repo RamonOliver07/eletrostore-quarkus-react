@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ShoppingCart, User, Search, Menu } from 'lucide-react';
 import { useState } from 'react';
@@ -50,11 +49,12 @@ function Header() {
             </form>
           </div>
 
+          {/* --- MUDANÇA AQUI --- */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-blue-700">Home</Link>
             <Link to="/produtos" className="text-gray-700 hover:text-blue-700">Produtos</Link>
             <Link to="/categorias" className="text-gray-700 hover:text-blue-700">Categorias</Link>
-            <Link to="/contato" className="text-gray-700 hover:text-blue-700">Contato</Link>
+            {/* O link "Contato" foi removido */}
           </nav>
 
           <div className="flex items-center space-x-6">
@@ -117,11 +117,12 @@ function Header() {
                 </button>
               </div>
             </form>
+            {/* --- MUDANÇA AQUI --- */}
             <nav className="flex flex-col space-y-4">
               <Link to="/" className="text-gray-700 hover:text-blue-700">Home</Link>
               <Link to="/produtos" className="text-gray-700 hover:text-blue-700">Produtos</Link>
               <Link to="/categorias" className="text-gray-700 hover:text-blue-700">Categorias</Link>
-              <Link to="/contato" className="text-gray-700 hover:text-blue-700">Contato</Link>
+              {/* O link "Contato" foi removido */}
             </nav>
           </div>
         )}

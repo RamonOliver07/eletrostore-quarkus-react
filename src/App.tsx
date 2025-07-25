@@ -1,26 +1,29 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import Header from './views/components/Header';
 import Footer from './views/components/Footer';
 import Home from './views/pages/Home';
 import Products from './views/pages/Products';
 import Categories from './views/pages/Categories';
-import About from './views/pages/About';
-import Contact from './views/pages/Contact';
 import Cart from './views/pages/Cart';
 import Login from './views/pages/Login';
 import Register from './views/pages/Register';
 import AdminProducts from './views/pages/admin/AdminProducts';
+import { useAuthStore } from './store/authStore'; // <-- 1. Importa o authStore
 
 function App() {
+  // 2. Obtém os dados de autenticação
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const userRole = useAuthStore(state => state.user?.papel);
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
         
-        {/* O main flex-grow garante que o footer fique no final da página */}
         <main className="flex-grow">
           <Switch>
+            {/* --- Rotas Públicas --- */}
             <Route exact path="/">
               <Home />
             </Route>
@@ -29,12 +32,6 @@ function App() {
             </Route>
             <Route path="/categorias">
               <Categories />
-            </Route>
-            <Route path="/sobre">
-              <About />
-            </Route>
-            <Route path="/contato">
-              <Contact />
             </Route>
             <Route path="/carrinho">
               <Cart />
@@ -45,9 +42,16 @@ function App() {
             <Route path="/cadastro">
               <Register />
             </Route>
+            
+            {/* --- Rota Protegida para Administradores (Lógica Embutida) --- */}
             <Route path="/admin/produtos">
-              <AdminProducts />
+              {isAuthenticated && userRole === 'admin' ? (
+                <AdminProducts />
+              ) : (
+                <Redirect to="/" />
+              )}
             </Route>
+            
           </Switch>
         </main>
         

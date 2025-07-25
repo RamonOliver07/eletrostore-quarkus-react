@@ -1,64 +1,74 @@
 package com.eletronicos.resource;
 
-import java.util.Collections;
-import java.util.Optional;
+import com.eletronicos.model.Pedido;
+import com.eletronicos.dto.PedidoDTO;
+import com.eletronicos.formdto.PedidoFormDTO;
+import com.eletronicos.service.PedidoService;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.eletronicos.dto.PedidoDTO;
-import com.eletronicos.formdto.PedidoFormDTO;
-import com.eletronicos.model.Pedido;
-import com.eletronicos.service.PedidoService;
+import javax.ws.rs.core.SecurityContext;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/api/pedidos")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PedidoResource {
 
-	@Inject
-	PedidoService pedidoService;
+    @Inject
+    PedidoService pedidoService;
 
-	@GET
-	public Response listarPedidosDoUsuario() {
-		// A lógica de segurança será tratada pelo filtro.
-		// Precisaremos de uma forma de obter o utilizador atual a partir do token.
-		// Por agora, retorna uma lista vazia para que o endpoint funcione.
-		return Response.ok(Collections.emptyList()).build();
-	}
+    @GET
+    public Response listarPedidosDoUsuario(@Context SecurityContext ctx) {
+        // VERIFICAÇÃO: Garante que há um utilizador logado
+        if (ctx.getUserPrincipal() == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        String emailUsuario = ctx.getUserPrincipal().getName();
+        List<Pedido> pedidos = pedidoService.listarPorUsuario(emailUsuario);
 
-	@GET
-	@Path("/{id}")
-	public Response buscarPorId(@PathParam("id") Long id) {
-		Optional<Pedido> pedidoOpt = pedidoService.buscarPorId(id);
+        List<PedidoDTO> pedidosDTO = pedidos.stream()
+                                            .map(pedido -> new PedidoDTO(pedido))
+                                            .collect(Collectors.toList());
+        
+        return Response.ok(pedidosDTO).build();
+    }
 
-		if (pedidoOpt.isPresent()) {
-			PedidoDTO dto = new PedidoDTO(pedidoOpt.get());
-			return Response.ok(dto).build();
-		} else {
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
-	}
+    @GET
+    @Path("/{id}")
+    public Response buscarPorId(@PathParam("id") Long id, @Context SecurityContext ctx) {
+        // VERIFICAÇÃO: Garante que há um utilizador logado
+        if (ctx.getUserPrincipal() == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        String emailUsuario = ctx.getUserPrincipal().getName();
+        
+        return pedidoService.buscarPorIdEUsuario(id, emailUsuario)
+                .map(pedido -> Response.ok(new PedidoDTO(pedido)).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
 
-	@POST
-	@Transactional
-	public Response criarPedido(PedidoFormDTO dto) {
-		// A lógica de segurança será tratada pelo filtro.
-		// Assume um utilizador de teste por enquanto.
-		String emailUsuarioTeste = "cliente@exemplo.com";
-		try {
-			Pedido pedidoCriado = pedidoService.criarPedido(dto, emailUsuarioTeste);
-			return Response.status(Response.Status.CREATED).entity(new PedidoDTO(pedidoCriado)).build();
-		} catch (Exception e) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
-	}
+    @POST
+    @Transactional
+    public Response criarPedido(PedidoFormDTO dto, @Context SecurityContext ctx) {
+        // VERIFICAÇÃO: Garante que há um utilizador logado
+        if (ctx.getUserPrincipal() == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        try {
+            String emailUsuario = ctx.getUserPrincipal().getName();
+            Pedido pedidoCriado = pedidoService.criarPedido(dto, emailUsuario);
+            return Response.status(Response.Status.CREATED).entity(new PedidoDTO(pedidoCriado)).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
 }

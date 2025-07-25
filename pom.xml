@@ -28,7 +28,6 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
-    <!-- Dependências do Quarkus -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive</artifactId>
@@ -54,14 +53,21 @@
       <artifactId>quarkus-hibernate-validator</artifactId>
     </dependency>
     
-    <!-- Dependência de Criptografia (jbcrypt) -->
+    <!-- DEPENDÊNCIA DO H2 CONSOLE REMOVIDA PARA CORRIGIR O ERRO -->
+    <!-- 
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-h2-console</artifactId>
+    </dependency>
+     -->
+    
     <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
       <version>0.4</version>
     </dependency>
 
-    <!-- NOVAS DEPENDÊNCIAS PARA JWT MANUAL (JJWT) -->
+    <!-- Dependências de JWT Manual (JJWT) -->
     <dependency>
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-api</artifactId>

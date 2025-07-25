@@ -1,7 +1,8 @@
 package com.eletronicos.resource;
 
 import com.eletronicos.model.Usuario;
-import com.eletronicos.service.TokenService; 
+import com.eletronicos.service.TokenService; // <-- Importa o novo serviço
+import com.eletronicos.service.LogService;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.inject.Inject;
@@ -19,6 +20,9 @@ public class AuthResource {
     @Inject
     TokenService tokenService; // <-- Injeta o nosso novo TokenService
 
+    @Inject
+    LogService logService;
+
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
@@ -28,12 +32,15 @@ public class AuthResource {
         Usuario usuario = Usuario.find("email", loginRequest.email).firstResult();
         
         if (usuario == null || !BCrypt.checkpw(loginRequest.senha, usuario.getHashSenha())) {
+            logService.registrarAcao(loginRequest.email, "LOGIN_FALHOU", "Tentativa de login com credenciais inválidas.");
             return Response.status(Response.Status.UNAUTHORIZED).entity("E-mail ou senha inválidos.").build();
         }
         
         // --- MUDANÇA PRINCIPAL AQUI ---
         // Delega a geração do token para o TokenService
         String token = tokenService.generateToken(usuario);
+        
+        logService.registrarAcao(usuario.getEmail(), "LOGIN_SUCESSO", "Utilizador autenticado com sucesso.");
         
         // Retorna uma resposta de sucesso com os dados do utilizador e o token
         return Response.ok(new AuthResponse(token, usuario.getNome(), usuario.getEmail(), usuario.getPapel())).build();

@@ -1,9 +1,12 @@
 com/eletronicos/dto/CategoriaDTO.class
+com/eletronicos/model/Log.class
+com/eletronicos/service/LogService.class
 com/eletronicos/resource/CarrinhoResource.class
 com/eletronicos/resource/PedidoResource.class
 com/eletronicos/service/DataInitializationService.class
 com/eletronicos/resource/ProdutoResource.class
 com/eletronicos/dto/ProdutoDTO.class
+com/eletronicos/filter/AuthenticationFilter$1.class
 com/eletronicos/model/ItemPedido.class
 com/eletronicos/service/TokenService.class
 com/eletronicos/resource/AuthResource.class

@@ -71,10 +71,7 @@ public class UsuarioResource {
         List<Usuario> usuarios = usuarioService.listarTodos();
         // Converte a lista de entidades para uma lista de DTOs
         return usuarios.stream()
-                       .map(UsuarioDTO::new)
+                       .map(usuario -> new UsuarioDTO(usuario))
                        .collect(Collectors.toList());
     }
-
-    // Os métodos de perfil (obterPerfil, atualizarPerfil) foram removidos temporariamente
-    // pois dependiam do SecurityContext, que foi desativado.
 }

@@ -1,7 +1,7 @@
 package com.eletronicos.bo;
 
-import com.eletronicos.formdto.CategoriaFormDTO;
 import com.eletronicos.model.Categoria;
+import com.eletronicos.formdto.CategoriaFormDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 

@@ -8,8 +8,10 @@ import com.eletronicos.service.ProdutoService;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +23,8 @@ public class ProdutoResource {
 
     @Inject
     ProdutoService produtoService;
+
+    // --- Endpoints Públicos (GET) ---
 
     @GET
     public List<ProdutoDTO> listarTodos() {
@@ -38,18 +42,15 @@ public class ProdutoResource {
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 
-    @GET
-    @Path("/destaques")
-    public List<ProdutoDTO> listarDestaques() {
-        List<Produto> produtos = produtoService.listarDestaques();
-        return produtos.stream()
-                .map(produto -> new ProdutoDTO(produto))
-                .collect(Collectors.toList());
-    }
+    // --- Endpoints de Administração (Protegidos) ---
 
     @POST
     @Transactional
-    public Response criar(ProdutoFormDTO dto) {
+    public Response criar(ProdutoFormDTO dto, @Context SecurityContext ctx) {
+        // VERIFICAÇÃO DE SEGURANÇA: Apenas utilizadores com o papel "admin" podem passar
+        if (ctx.getUserPrincipal() == null || !ctx.isUserInRole("admin")) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Acesso negado.").build();
+        }
         Produto produtoCriado = produtoService.criar(dto);
         return Response.status(Response.Status.CREATED).entity(new ProdutoDTO(produtoCriado)).build();
     }
@@ -57,7 +58,11 @@ public class ProdutoResource {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response atualizar(@PathParam("id") Long id, ProdutoFormDTO dto) {
+    public Response atualizar(@PathParam("id") Long id, ProdutoFormDTO dto, @Context SecurityContext ctx) {
+        // VERIFICAÇÃO DE SEGURANÇA
+        if (ctx.getUserPrincipal() == null || !ctx.isUserInRole("admin")) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Acesso negado.").build();
+        }
         Optional<Produto> produtoAtualizado = produtoService.atualizar(id, dto);
         if (produtoAtualizado.isPresent()) {
             return Response.ok(new ProdutoDTO(produtoAtualizado.get())).build();
@@ -68,7 +73,11 @@ public class ProdutoResource {
     @DELETE
     @Path("/{id}")
     @Transactional
-    public Response deletar(@PathParam("id") Long id) {
+    public Response deletar(@PathParam("id") Long id, @Context SecurityContext ctx) {
+        // VERIFICAÇÃO DE SEGURANÇA
+        if (ctx.getUserPrincipal() == null || !ctx.isUserInRole("admin")) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Acesso negado.").build();
+        }
         if (produtoService.deletar(id)) {
             return Response.noContent().build();
         }
