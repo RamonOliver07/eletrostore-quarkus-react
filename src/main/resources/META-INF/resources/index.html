@@ -1,207 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EletroStore - Sua Loja de Eletrônicos</title>
-    <!-- Fontes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>EletroStore</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            flex: 1;
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
+
+    <!-- Menu de Navegação -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="index.html">
-                        <h1>Eletro<span>Store</span></h1>
-                    </a>
-                </div>
-                <div class="search-bar">
-                    <input type="text" id="search-input" placeholder="O que você está procurando?">
-                    <button id="search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="index.html" class="active">Home</a></li>
-                        <li><a href="produtos.html">Produtos</a></li>
-                        <li><a href="categorias.html">Categorias</a></li>
-                        <li><a href="sobre.html">Sobre</a></li>
-                        <li><a href="contato.html">Contato</a></li>
-                    </ul>
-                </nav>
-                <div class="user-actions">
-                    <a href="carrinho.html" class="cart-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cart-count">0</span>
-                    </a>
-                    <a href="login.html" class="login-button" id="login-button">
-                        <i class="fas fa-user"></i>
-                        <span>Entrar</span>
-                    </a>
-                    <div class="user-dropdown" id="user-dropdown" style="display: none;">
-                        <p id="user-name">Olá, Usuário</p>
-                        <ul>
-                            <li><a href="perfil.html">Meu Perfil</a></li>
-                            <li><a href="pedidos.html">Meus Pedidos</a></li>
-                            <li><a href="#" id="logout-button">Sair</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
+            <a class="navbar-brand" href="/">
+                <span class="fw-bold text-primary">Eletro</span><span class="fw-bold text-warning">Store</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" id="nav-items">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/produtos.html">Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/carrinho.html">Carrinho</a>
+                    </li>
+                    <!-- O link de login será substituído pelo JavaScript -->
+                    <li class="nav-item" id="auth-link-container">
+                        <a class="nav-link" href="/login.html">Entrar</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <!-- Banner Principal -->
-        <section class="hero-banner">
-            <div class="container">
-                <div class="hero-content">
-                    <h2>As melhores ofertas em eletrônicos</h2>
-                    <p>Encontre smartphones, notebooks, tablets e muito mais com os melhores preços do mercado.</p>
-                    <a href="produtos.html" class="btn btn-primary">Ver Ofertas</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Categorias -->
-        <section class="categories-section">
-            <div class="container">
-                <h2 class="section-title">Categorias</h2>
-                <div class="categories-grid" id="categories-container">
-                    <!-- As categorias serão carregadas dinamicamente pelo JavaScript -->
-                    <div class="category-loading">Carregando categorias...</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Produtos em Destaque -->
-        <section class="featured-products">
-            <div class="container">
-                <h2 class="section-title">Produtos em Destaque</h2>
-                <div class="products-grid" id="featured-products-container">
-                    <!-- Os produtos serão carregados dinamicamente pelo JavaScript -->
-                    <div class="product-loading">Carregando produtos...</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Banners Promocionais -->
-        <section class="promotional-banners">
-            <div class="container">
-                <div class="banners-grid">
-                    <div class="promo-banner">
-                        <div class="banner-content">
-                            <h3>Smartphones com até 30% OFF</h3>
-                            <p>Aproveite as ofertas especiais em smartphones de última geração.</p>
-                            <a href="produtos.html?categoria=smartphones" class="btn btn-secondary">Ver Ofertas</a>
-                        </div>
-                    </div>
-                    <div class="promo-banner">
-                        <div class="banner-content">
-                            <h3>Frete Grátis</h3>
-                            <p>Em compras acima de R$ 300,00 para todo o Brasil.</p>
-                            <a href="produtos.html" class="btn btn-secondary">Comprar Agora</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Produtos Recentes -->
-        <section class="new-products">
-            <div class="container">
-                <h2 class="section-title">Produtos Recém-Chegados</h2>
-                <div class="products-grid" id="new-products-container">
-                    <!-- Os produtos serão carregados dinamicamente pelo JavaScript -->
-                    <div class="product-loading">Carregando produtos...</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Newsletter -->
-        <section class="newsletter-section">
-            <div class="container">
-                <div class="newsletter-content">
-                    <h3>Fique por dentro de todas as novidades</h3>
-                    <p>Cadastre-se para receber ofertas exclusivas e lançamentos em primeira mão.</p>
-                    <form id="newsletter-form">
-                        <input type="email" placeholder="Seu e-mail" required>
-                        <button type="submit" class="btn btn-primary">Inscrever-se</button>
-                    </form>
-                </div>
-            </div>
-        </section>
+    <!-- Conteúdo Principal da Página -->
+    <main class="main-content container py-5">
+        <div class="text-center">
+            <h1 class="display-4 fw-bold">Bem-vindo à EletroStore</h1>
+            <p class="lead text-muted">A sua loja de eletrónicos favorita com os melhores preços do mercado.</p>
+            <a href="/produtos.html" class="btn btn-primary btn-lg mt-3">Ver Produtos</a>
+        </div>
     </main>
 
-    <footer class="footer">
+    <!-- Rodapé -->
+    <footer class="bg-dark text-white text-center p-3">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h2>Eletro<span>Store</span></h2>
-                    <p>A sua loja de eletrônicos favorita com os melhores preços do mercado.</p>
-                </div>
-                <div class="footer-links">
-                    <h3>Links Rápidos</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="produtos.html">Produtos</a></li>
-                        <li><a href="categorias.html">Categorias</a></li>
-                        <li><a href="sobre.html">Sobre Nós</a></li>
-                        <li><a href="contato.html">Contato</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h3>Categorias</h3>
-                    <ul id="footer-categories">
-                        <!-- As categorias serão carregadas dinamicamente pelo JavaScript -->
-                        <li><a href="produtos.html?categoria=smartphones">Smartphones</a></li>
-                        <li><a href="produtos.html?categoria=notebooks">Notebooks</a></li>
-                        <li><a href="produtos.html?categoria=tablets">Tablets</a></li>
-                        <li><a href="produtos.html?categoria=acessorios">Acessórios</a></li>
-                        <li><a href="produtos.html?categoria=audio">Áudio</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h3>Contato</h3>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> Av. Tecnologia, 1500 - São Paulo, SP</li>
-                        <li><i class="fas fa-phone"></i> (11) 3456-7890</li>
-                        <li><i class="fas fa-envelope"></i> contato@eletrostore.com.br</li>
-                    </ul>
-                    <div class="social-media">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 EletroStore - Todos os direitos reservados</p>
-                <div class="payment-methods">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-cc-amex"></i>
-                    <i class="fab fa-pix"></i>
-                    <i class="fas fa-barcode"></i>
-                </div>
-            </div>
+            <p>&copy; 2025 EletroStore - Todos os direitos reservados</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
-    <script src="js/home.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Nosso Script de Autenticação CENTRALIZADO -->
+    <script src="/js/auth.js"></script>
 </body>
 </html>

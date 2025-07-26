@@ -3,39 +3,32 @@ package com.eletronicos.model;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "Produto")
 public class Produto extends PanacheEntity {
 
-    @NotBlank(message = "O nome é obrigatório")
     private String nome;
 
-    @NotBlank(message = "A descrição é obrigatória")
     @Column(length = 2000)
     private String descricao;
 
-    @NotNull(message = "O preço é obrigatório")
-    @Min(value = 0, message = "O preço deve ser um valor positivo")
     private BigDecimal preco;
+    private int estoque;
 
-    @NotNull(message = "A quantidade em estoque é obrigatória")
-    @Min(value = 0, message = "A quantidade em estoque deve ser um valor positivo")
-    private Integer estoque;
-
+    @Column(length = 1024)
     private String imagem;
-    
+
     private String marca;
-    
     private String modelo;
-    
-    private Boolean destaque = false;
+    private boolean destaque;
 
     @ManyToOne
+    @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
     // Getters e Setters
@@ -63,11 +56,11 @@ public class Produto extends PanacheEntity {
         this.preco = preco;
     }
 
-    public Integer getEstoque() {
+    public int getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(Integer estoque) {
+    public void setEstoque(int estoque) {
         this.estoque = estoque;
     }
 
@@ -78,28 +71,28 @@ public class Produto extends PanacheEntity {
     public void setImagem(String imagem) {
         this.imagem = imagem;
     }
-    
+
     public String getMarca() {
         return marca;
     }
-    
+
     public void setMarca(String marca) {
         this.marca = marca;
     }
-    
+
     public String getModelo() {
         return modelo;
     }
-    
+
     public void setModelo(String modelo) {
         this.modelo = modelo;
     }
-    
-    public Boolean getDestaque() {
+
+    public boolean getDestaque() {
         return destaque;
     }
-    
-    public void setDestaque(Boolean destaque) {
+
+    public void setDestaque(boolean destaque) {
         this.destaque = destaque;
     }
 

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Pedido - EletroStore</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menu de Navegação -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <span class="fw-bold text-primary">Eletro</span><span class="fw-bold text-warning">Store</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" id="nav-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/produtos.html">Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/carrinho.html">Carrinho</a>
+                    </li>
+                    <li class="nav-item" id="auth-link-container">
+                        <a class="nav-link" href="/login.html">Entrar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal da Página de Pedido -->
+    <main class="main-content container py-5">
+        <div id="order-details-container">
+            <!-- Mensagem de carregamento -->
+            <div id="loading-message" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">A carregar...</span>
+                </div>
+                <p class="mt-2">A carregar detalhes do pedido...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-dark text-white text-center p-3">
+        <div class="container">
+            <p>&copy; 2025 EletroStore - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Nosso Script de Autenticação e de Pedido -->
+    <script src="/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const orderDetailsContainer = document.getElementById('order-details-container');
+            const loadingMessage = document.getElementById('loading-message');
+            const token = localStorage.getItem('user_token');
+
+            // Pega o ID do pedido a partir do URL (ex: /pedido.html?id=123)
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('id');
+
+            if (!orderId) {
+                orderDetailsContainer.innerHTML = '<div class="alert alert-danger">ID do pedido não encontrado.</div>';
+                return;
+            }
+            
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/pedidos/${orderId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                loadingMessage.remove();
+
+                if (!response.ok) {
+                    throw new Error('Não foi possível encontrar o pedido ou você não tem permissão para o ver.');
+                }
+                
+                const order = await response.json();
+                renderOrderDetails(order);
+
+            } catch (error) {
+                console.error('Erro ao carregar o pedido:', error);
+                orderDetailsContainer.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            }
+        });
+
+        function renderOrderDetails(order) {
+            const orderDetailsContainer = document.getElementById('order-details-container');
+            
+            const itemsHtml = order.itens.map(item => `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="my-0">${item.nomeProduto}</h6>
+                        <small class="text-muted">Quantidade: ${item.quantidade}</small>
+                    </div>
+                    <span class="text-muted">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.precoUnitario * item.quantidade)}</span>
+                </li>
+            `).join('');
+
+            orderDetailsContainer.innerHTML = `
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <h4 class="my-0">Pedido #${order.id} - Compra Realizada!</h4>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Obrigado pela sua compra, ${order.nomeUsuario}!</strong> O seu pedido foi recebido e está a ser processado.</p>
+                                <hr>
+                                <p><strong>Data do Pedido:</strong> ${new Date(order.dataPedido).toLocaleDateString('pt-BR')}</p>
+                                <p><strong>Status do Pedido:</strong> <span class="badge bg-success">${order.status}</span></p>
+                                
+                                <h5 class="mt-4">Itens do Pedido</h5>
+                                <ul class="list-group mb-3">
+                                    ${itemsHtml}
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Total (BRL)</span>
+                                        <strong>${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(order.valorTotal)}</strong>
+                                    </li>
+                                </ul>
+                                <a href="/produtos.html" class="btn btn-outline-primary">Continuar a Comprar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

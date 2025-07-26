@@ -24,9 +24,24 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+<<<<<<< HEAD
         // Rotas que não precisam de autenticação
         String path = requestContext.getUriInfo().getPath();
         if (path.startsWith("/api/auth/login") || path.startsWith("/api/usuarios/cadastro")) {
+=======
+        String path = requestContext.getUriInfo().getPath();
+        String method = requestContext.getMethod();
+
+        // --- MUDANÇA PRINCIPAL AQUI ---
+        // Permite o acesso público a rotas específicas
+        boolean isPublicPath = path.startsWith("/api/auth/login") || 
+                               path.startsWith("/api/usuarios/cadastro") ||
+                               (path.startsWith("/api/produtos") && method.equals("GET")) ||
+                               (path.startsWith("/api/categorias") && method.equals("GET")) ||
+                               path.startsWith("/api/carrinho/calcular"); // <-- ROTA DO CARRINHO ADICIONADA
+
+        if (isPublicPath) {
+>>>>>>> 57e4a65... refactor(pedido): Implementa BO e DTOs para a entidade Pedido
             return; // Não faz nada, permite a passagem
         }
 
@@ -51,7 +66,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             requestContext.setSecurityContext(new SecurityContext() {
                 @Override
                 public Principal getUserPrincipal() {
+<<<<<<< HEAD
                     return () -> claims.getBody().getSubject(); // O "subject" é o e-mail do utilizador
+=======
+                    return () -> claims.getBody().getSubject();
+>>>>>>> 57e4a65... refactor(pedido): Implementa BO e DTOs para a entidade Pedido
                 }
 
                 @Override
@@ -73,7 +92,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             });
 
         } catch (Exception e) {
+<<<<<<< HEAD
             // Se o token for inválido ou expirado, bloqueia a requisição
+=======
+>>>>>>> 57e4a65... refactor(pedido): Implementa BO e DTOs para a entidade Pedido
             abortWithUnauthorized(requestContext);
         }
     }

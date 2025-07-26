@@ -23,6 +23,8 @@
                 <span class="fw-bold text-primary">Eletro</span><span class="fw-bold text-warning">Store</span>
             </a>
             <div class="navbar-nav ms-auto">
+                <a class="nav-link active" href="/admin-produtos.html">Gerir Produtos</a>
+                <a class="nav-link" href="/admin-categorias.html">Gerir Categorias</a> <!-- <-- LINK ADICIONADO -->
                 <a class="nav-link" href="#" id="logout-button">Sair</a>
             </div>
         </div>
@@ -135,7 +137,6 @@
         const userRole = localStorage.getItem('user_role');
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Segurança: Verifica se o utilizador é admin
             if (!token || userRole !== 'admin') {
                 alert('Acesso negado. Por favor, faça login como administrador.');
                 window.location.href = '/login.html';
@@ -163,7 +164,6 @@
                 const errorText = await response.text();
                 throw new Error(errorText || `Erro na API: ${response.statusText}`);
             }
-            // Retorna JSON apenas se houver conteúdo
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
                 return response.json();

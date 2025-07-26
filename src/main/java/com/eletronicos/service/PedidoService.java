@@ -1,6 +1,7 @@
 package com.eletronicos.service;
 
 import com.eletronicos.bo.PedidoBO;
+import com.eletronicos.model.ItemPedido;
 import com.eletronicos.model.Pedido;
 import com.eletronicos.formdto.PedidoFormDTO;
 import com.eletronicos.model.StatusPedido;
@@ -9,8 +10,10 @@ import com.eletronicos.model.Usuario;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,37 +24,63 @@ public class PedidoService {
     EntityManager em;
 
     @Inject
-    PedidoBO pedidoBO; 
+    PedidoBO pedidoBO;
 
+    @Transactional
     public List<Pedido> listarPorUsuario(String email) {
         Usuario usuario = Usuario.find("email", email).firstResult();
-        return Pedido.list("usuario", usuario);
+        if (usuario == null) {
+            return Collections.emptyList();
+        }
+        // --- CORREÇÃO AQUI: Adicionado "LEFT JOIN FETCH p.itens" para carregar os itens ---
+        return em.createQuery("SELECT p FROM Pedido p LEFT JOIN FETCH p.itens WHERE p.usuario.id = :userId ORDER BY p.dataPedido DESC", Pedido.class)
+                 .setParameter("userId", usuario.id)
+                 .getResultList();
     }
     
+    @Transactional
     public Optional<Pedido> buscarPorId(Long id) {
-        return Pedido.findByIdOptional(id);
+        // Adicionando JOIN FETCH aqui também para consistência
+        try {
+            Pedido pedido = em.createQuery("SELECT p FROM Pedido p LEFT JOIN FETCH p.itens WHERE p.id = :pedidoId", Pedido.class)
+                              .setParameter("pedidoId", id)
+                              .getSingleResult();
+            return Optional.of(pedido);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
+    @Transactional
     public Optional<Pedido> buscarPorIdEUsuario(Long id, String email) {
         Usuario usuario = Usuario.find("email", email).firstResult();
         if (usuario == null) {
             return Optional.empty();
         }
-        Pedido pedido = Pedido.find("id = ?1 and usuario = ?2", id, usuario).firstResult();
-        return Optional.ofNullable(pedido);
+        try {
+            // --- CORREÇÃO AQUI: Adicionado "LEFT JOIN FETCH p.itens" ---
+            Pedido pedido = em.createQuery("SELECT p FROM Pedido p LEFT JOIN FETCH p.itens WHERE p.id = :pedidoId AND p.usuario.id = :userId", Pedido.class)
+                              .setParameter("pedidoId", id)
+                              .setParameter("userId", usuario.id)
+                              .getSingleResult();
+            return Optional.of(pedido);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Transactional
     public Pedido criarPedido(PedidoFormDTO dto, String emailUsuario) {
-        // 1. Busca o utilizador (orquestração de dados)
         Usuario usuario = Usuario.<Usuario>find("email", emailUsuario).firstResultOptional()
                 .orElseThrow(() -> new WebApplicationException("Utilizador não encontrado", 404));
 
-        // 2. Delega a validação e a construção para o BO
         Pedido pedido = pedidoBO.construirPedido(dto, usuario);
 
-        // 3. O Service agora só se preocupa com a persistência
         em.persist(pedido);
+
+        for (ItemPedido item : pedido.getItens()) {
+            em.persist(item);
+        }
         
         return pedido;
     }

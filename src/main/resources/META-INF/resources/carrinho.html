@@ -1,654 +1,227 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrinho de Compras - EletroStore</title>
-    <!-- Fontes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
-        .cart-container {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .cart-title {
-            margin-bottom: 2rem;
-            color: var(--primary-color);
-            font-size: 1.75rem;
-        }
-        
-        .cart-empty {
-            text-align: center;
-            padding: 3rem 0;
-        }
-        
-        .cart-empty i {
-            font-size: 3rem;
-            color: var(--gray-400);
-            margin-bottom: 1rem;
-        }
-        
-        .cart-empty p {
-            color: var(--text-medium);
-            margin-bottom: 1.5rem;
-        }
-        
-        .cart-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .cart-table th {
-            text-align: left;
-            padding: 1rem 0.5rem;
-            border-bottom: 1px solid var(--gray-300);
-            color: var(--text-medium);
-            font-weight: 500;
-        }
-        
-        .cart-table td {
-            padding: 1rem 0.5rem;
-            border-bottom: 1px solid var(--gray-200);
-            vertical-align: middle;
-        }
-        
-        .cart-product {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .cart-product-image {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            background-color: var(--gray-100);
-            border-radius: var(--border-radius);
-        }
-        
-        .cart-product-details h3 {
-            margin-bottom: 0.25rem;
-            font-size: 1rem;
-        }
-        
-        .cart-quantity {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .cart-quantity button {
-            width: 30px;
-            height: 30px;
-            border: 1px solid var(--gray-300);
-            background-color: var(--white);
-            border-radius: 4px;
-            color: var(--text-medium);
-            transition: var(--transition);
-        }
-        
-        .cart-quantity button:hover {
-            background-color: var(--gray-100);
-        }
-        
-        .cart-quantity input {
-            width: 50px;
-            height: 30px;
-            text-align: center;
-            border: 1px solid var(--gray-300);
-            border-radius: 4px;
-        }
-        
-        .cart-price {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        
-        .cart-remove {
-            color: var(--error);
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .cart-remove:hover {
-            color: var(--error);
-            opacity: 0.8;
-        }
-        
-        .cart-summary {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 2rem;
-        }
-        
-        .cart-summary h3 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-        }
-        
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .summary-row:last-of-type {
-            border-bottom: none;
-            margin-bottom: 1.5rem;
-        }
-        
-        .summary-row.total {
-            font-weight: 600;
-            font-size: 1.25rem;
-            color: var(--primary-color);
-        }
-        
-        .cart-actions {
+        body {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
-    <header class="header">
+
+    <!-- Menu de Navegação -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="index.html">
-                        <h1>Eletro<span>Store</span></h1>
-                    </a>
-                </div>
-                <div class="search-bar">
-                    <input type="text" id="search-input" placeholder="O que você está procurando?">
-                    <button id="search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                <nav class="nav-menu">
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="produtos.html">Produtos</a></li>
-                        <li><a href="categorias.html">Categorias</a></li>
-                        <li><a href="sobre.html">Sobre</a></li>
-                        <li><a href="contato.html">Contato</a></li>
-                    </ul>
-                </nav>
-                <div class="user-actions">
-                    <a href="carrinho.html" class="cart-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cart-count">0</span>
-                    </a>
-                    <a href="login.html" class="login-button" id="login-button">
-                        <i class="fas fa-user"></i>
-                        <span>Entrar</span>
-                    </a>
-                    <div class="user-dropdown" id="user-dropdown" style="display: none;">
-                        <p id="user-name">Olá, Usuário</p>
-                        <ul>
-                            <li><a href="perfil.html">Meu Perfil</a></li>
-                            <li><a href="pedidos.html">Meus Pedidos</a></li>
-                            <li><a href="#" id="logout-button">Sair</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
+            <a class="navbar-brand" href="/">
+                <span class="fw-bold text-primary">Eletro</span><span class="fw-bold text-warning">Store</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" id="nav-items">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/produtos.html">Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/carrinho.html">Carrinho</a>
+                    </li>
+                    <li class="nav-item" id="auth-link-container">
+                        <a class="nav-link" href="/login.html">Entrar</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <section class="section">
-            <div class="container">
-                <h1 class="section-title">Meu Carrinho</h1>
-                
-                <div id="cart-messages"></div>
-                
-                <div class="row" style="display: flex; flex-wrap: wrap; gap: 2rem;">
-                    <div id="cart-list" style="flex: 2; min-width: 300px;">
-                        <!-- O conteúdo do carrinho será carregado dinamicamente pelo JavaScript -->
-                        <div class="loading-indicator">
-                            <div class="spinner"></div>
-                            <p>Carregando carrinho...</p>
-                        </div>
-                    </div>
-                    
-                    <div id="cart-summary" style="flex: 1; min-width: 300px;">
-                        <!-- O resumo do carrinho será carregado dinamicamente pelo JavaScript -->
-                    </div>
+    <!-- Conteúdo Principal da Página do Carrinho -->
+    <main class="main-content container py-5">
+        <h1 class="mb-4">Carrinho de Compras</h1>
+        
+        <div id="cart-container" class="row g-5">
+            <!-- Mensagem de carregamento -->
+            <div id="loading-message" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">A carregar...</span>
                 </div>
+                <p class="mt-2">A carregar carrinho...</p>
             </div>
-        </section>
+        </div>
     </main>
 
-    <footer class="footer">
+    <!-- Rodapé -->
+    <footer class="bg-dark text-white text-center p-3">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h2>Eletro<span>Store</span></h2>
-                    <p>A sua loja de eletrônicos favorita com os melhores preços do mercado.</p>
-                </div>
-                <div class="footer-links">
-                    <h3>Links Rápidos</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="produtos.html">Produtos</a></li>
-                        <li><a href="categorias.html">Categorias</a></li>
-                        <li><a href="sobre.html">Sobre Nós</a></li>
-                        <li><a href="contato.html">Contato</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h3>Categorias</h3>
-                    <ul id="footer-categories">
-                        <li><a href="produtos.html?categoria=smartphones">Smartphones</a></li>
-                        <li><a href="produtos.html?categoria=notebooks">Notebooks</a></li>
-                        <li><a href="produtos.html?categoria=tablets">Tablets</a></li>
-                        <li><a href="produtos.html?categoria=acessorios">Acessórios</a></li>
-                        <li><a href="produtos.html?categoria=audio">Áudio</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h3>Contato</h3>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> Av. Tecnologia, 1500 - São Paulo, SP</li>
-                        <li><i class="fas fa-phone"></i> (11) 3456-7890</li>
-                        <li><i class="fas fa-envelope"></i> contato@eletrostore.com.br</li>
-                    </ul>
-                    <div class="social-media">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 EletroStore - Todos os direitos reservados</p>
-                <div class="payment-methods">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-cc-amex"></i>
-                    <i class="fab fa-pix"></i>
-                    <i class="fas fa-barcode"></i>
-                </div>
-            </div>
+            <p>&copy; 2025 EletroStore - Todos os direitos reservados</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/main.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Nossos Scripts -->
+    <script src="/js/auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cartListContainer = document.getElementById('cart-list');
-            const cartSummaryContainer = document.getElementById('cart-summary');
-            const cartMessagesContainer = document.getElementById('cart-messages');
-            
-            // Carregar o carrinho
-            loadCart();
-            
-            async function loadCart() {
-                // Obter dados do carrinho do localStorage
-                const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-                
-                // Se o carrinho estiver vazio
-                if (cartItems.length === 0) {
-                    renderEmptyCart();
-                    return;
-                }
-                
-                try {
-                    // Calcular o carrinho usando a API
-                    const response = await fetch('/api/carrinho/calcular', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(cartItems)
-                    });
-                    
-                    const cartData = await response.json();
-                    
-                    // Renderizar os itens do carrinho
-                    renderCartItems(cartData.itens);
-                    
-                    // Renderizar o resumo do carrinho
-                    renderCartSummary(cartData);
-                    
-                } catch (error) {
-                    console.error('Erro ao carregar carrinho:', error);
-                    cartMessagesContainer.innerHTML = `
-                        <div class="alert alert-error">
-                            <i class="fas fa-exclamation-circle"></i>
-                            Erro ao carregar o carrinho. Tente novamente mais tarde.
-                        </div>
-                    `;
-                    
-                    // Mesmo com erro, vamos tentar renderizar algo básico
-                    renderCartItemsWithLocalData();
-                }
-            }
-            
-            function renderEmptyCart() {
-                cartListContainer.innerHTML = `
-                    <div class="cart-container">
-                        <div class="cart-empty">
-                            <i class="fas fa-shopping-cart"></i>
-                            <h3>Seu carrinho está vazio</h3>
-                            <p>Adicione produtos ao seu carrinho para continuar comprando.</p>
-                            <a href="produtos.html" class="btn btn-primary">Ver Produtos</a>
-                        </div>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const cartContainer = document.getElementById('cart-container');
+            const loadingMessage = document.getElementById('loading-message');
+
+            const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+
+            if (cartItems.length === 0) {
+                loadingMessage.remove();
+                cartContainer.innerHTML = `
+                    <div class="text-center col-12">
+                        <h2 class="h4">O seu carrinho está vazio</h2>
+                        <p class="text-muted">Adicione alguns produtos para começar as suas compras.</p>
+                        <a href="/produtos.html" class="btn btn-primary">Continuar a Comprar</a>
                     </div>
                 `;
-                
-                cartSummaryContainer.innerHTML = '';
+                return;
             }
-            
-            function renderCartItems(items) {
-                cartListContainer.innerHTML = `
-                    <div class="cart-container">
-                        <h2 class="cart-title">Itens do Carrinho</h2>
-                        <table class="cart-table">
-                            <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Preço</th>
-                                    <th>Quantidade</th>
-                                    <th>Subtotal</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="cart-items">
-                                ${items.map(item => `
-                                    <tr data-id="${item.produtoId}">
-                                        <td>
-                                            <div class="cart-product">
-                                                <img src="${item.imagem || 'https://via.placeholder.com/80x80?text=Produto'}" alt="${item.nome}" class="cart-product-image">
-                                                <div class="cart-product-details">
-                                                    <h3>${item.nome}</h3>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="cart-price">${formatCurrency(item.preco)}</td>
-                                        <td>
-                                            <div class="cart-quantity">
-                                                <button class="qty-decrease" data-id="${item.produtoId}">-</button>
-                                                <input type="number" value="${item.quantidade}" min="1" max="99" data-id="${item.produtoId}">
-                                                <button class="qty-increase" data-id="${item.produtoId}">+</button>
-                                            </div>
-                                        </td>
-                                        <td class="cart-price">${formatCurrency(item.subtotal)}</td>
-                                        <td>
-                                            <button class="cart-remove" data-id="${item.produtoId}">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-                
-                // Adicionar eventos aos botões de quantidade
-                setupQuantityEvents();
-                
-                // Adicionar eventos aos botões de remover
-                setupRemoveEvents();
-            }
-            
-            function renderCartItemsWithLocalData() {
-                const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-                
-                // Tentar obter os produtos da API de forma individual
-                const promises = cartItems.map(item => 
-                    fetch(`/api/produtos/${item.produtoId}`)
-                        .then(response => response.ok ? response.json() : null)
-                );
-                
-                Promise.all(promises).then(products => {
-                    const validProducts = products.filter(p => p !== null);
-                    
-                    if (validProducts.length === 0) {
-                        renderEmptyCart();
-                        return;
-                    }
-                    
-                    const items = validProducts.map((product, index) => {
-                        const cartItem = cartItems.find(item => item.produtoId === product.id);
-                        return {
-                            produtoId: product.id,
-                            nome: product.nome,
-                            imagem: product.imagem,
-                            preco: product.preco,
-                            quantidade: cartItem ? cartItem.quantidade : 1,
-                            subtotal: product.preco * (cartItem ? cartItem.quantidade : 1)
-                        };
-                    });
-                    
-                    renderCartItems(items);
-                    
-                    // Calcular totais de forma simples
-                    const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
-                    const frete = subtotal > 300 ? 0 : 25.9;
-                    
-                    renderCartSummary({
-                        itens: items,
-                        subtotal: subtotal,
-                        frete: frete,
-                        total: subtotal + frete
-                    });
+
+            try {
+                const response = await fetch('/api/carrinho/calcular', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(cartItems)
                 });
-            }
-            
-            function renderCartSummary(cartData) {
-                cartSummaryContainer.innerHTML = `
-                    <div class="cart-summary">
-                        <h3>Resumo do Pedido</h3>
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span>${formatCurrency(cartData.subtotal)}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Frete</span>
-                            <span>${cartData.frete === 0 ? 'Grátis' : formatCurrency(cartData.frete)}</span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>Total</span>
-                            <span>${formatCurrency(cartData.total)}</span>
-                        </div>
-                        
-                        <div class="cart-actions">
-                            <button id="btn-checkout" class="btn btn-primary">Finalizar Compra</button>
-                            <a href="produtos.html" class="btn btn-secondary">Continuar Comprando</a>
-                        </div>
-                    </div>
-                `;
-                
-                // Adicionar evento ao botão de finalizar compra
-                const checkoutButton = document.getElementById('btn-checkout');
-                checkoutButton.addEventListener('click', handleCheckout);
-            }
-            
-            function setupQuantityEvents() {
-                // Botões de diminuir quantidade
-                document.querySelectorAll('.qty-decrease').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const productId = parseInt(this.getAttribute('data-id'));
-                        updateQuantity(productId, -1);
-                    });
-                });
-                
-                // Botões de aumentar quantidade
-                document.querySelectorAll('.qty-increase').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const productId = parseInt(this.getAttribute('data-id'));
-                        updateQuantity(productId, 1);
-                    });
-                });
-                
-                // Inputs de quantidade
-                document.querySelectorAll('.cart-quantity input').forEach(input => {
-                    input.addEventListener('change', function() {
-                        const productId = parseInt(this.getAttribute('data-id'));
-                        const newQty = parseInt(this.value);
-                        
-                        if (newQty > 0) {
-                            setQuantity(productId, newQty);
-                        } else {
-                            this.value = 1;
-                            setQuantity(productId, 1);
-                        }
-                    });
-                });
-            }
-            
-            function setupRemoveEvents() {
-                document.querySelectorAll('.cart-remove').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const productId = parseInt(this.getAttribute('data-id'));
-                        removeFromCart(productId);
-                    });
-                });
-            }
-            
-            function updateQuantity(productId, change) {
-                const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-                const itemIndex = cartItems.findIndex(item => item.produtoId === productId);
-                
-                if (itemIndex !== -1) {
-                    cartItems[itemIndex].quantidade += change;
-                    
-                    // Garantir que a quantidade não seja menor que 1
-                    if (cartItems[itemIndex].quantidade < 1) {
-                        cartItems[itemIndex].quantidade = 1;
-                    }
-                    
-                    // Atualizar carrinho e recarregar
-                    localStorage.setItem('cart', JSON.stringify(cartItems));
-                    loadCart();
-                    updateCartCount();
-                }
-            }
-            
-            function setQuantity(productId, quantity) {
-                const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-                const itemIndex = cartItems.findIndex(item => item.produtoId === productId);
-                
-                if (itemIndex !== -1) {
-                    cartItems[itemIndex].quantidade = quantity;
-                    
-                    // Atualizar carrinho e recarregar
-                    localStorage.setItem('cart', JSON.stringify(cartItems));
-                    loadCart();
-                    updateCartCount();
-                }
-            }
-            
-            function removeFromCart(productId) {
-                const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-                const newCartItems = cartItems.filter(item => item.produtoId !== productId);
-                
-                // Atualizar carrinho e recarregar
-                localStorage.setItem('cart', JSON.stringify(newCartItems));
-                loadCart();
-                updateCartCount();
-                
-                showAlert('Produto removido do carrinho!', 'success');
-            }
-            
-            function handleCheckout() {
-                // Verificar se o usuário está autenticado
-                if (!isAuthenticated()) {
-                    showAlert('Faça login para continuar com a compra', 'warning');
-                    setTimeout(() => {
-                        window.location.href = 'login.html?redirect=checkout.html';
-                    }, 2000);
-                    return;
+
+                loadingMessage.remove();
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.erro || 'Não foi possível carregar o carrinho.');
                 }
                 
-                // Verificar estoque antes de prosseguir
-                checkStock();
-            }
-            
-            async function checkStock() {
-                const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-                
-                try {
-                    const response = await fetch('/api/carrinho/verificar-estoque', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(cartItems)
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.ok && data.status === 'OK') {
-                        // Estoque OK, redirecionar para checkout
-                        window.location.href = 'checkout.html';
-                    } else {
-                        // Problemas com estoque
-                        showStockErrors(data.produtos);
-                    }
-                    
-                } catch (error) {
-                    console.error('Erro ao verificar estoque:', error);
-                    showAlert('Erro ao verificar disponibilidade de estoque', 'error');
-                }
-            }
-            
-            function showStockErrors(products) {
-                let errorMessage = `
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <div>
-                            <p><strong>Não foi possível prosseguir com a compra</strong></p>
-                            <ul style="margin-top: 0.5rem;">
-                `;
-                
-                products.forEach(product => {
-                    errorMessage += `<li>${product.nome}: ${product.mensagem} (Disponível: ${product.estoqueDisponivel}, Solicitado: ${product.quantidadeSolicitada})</li>`;
-                });
-                
-                errorMessage += `
-                            </ul>
-                        </div>
-                    </div>
-                `;
-                
-                cartMessagesContainer.innerHTML = errorMessage;
-                
-                // Scroll para a mensagem
-                cartMessagesContainer.scrollIntoView({ behavior: 'smooth' });
-            }
-            
-            function formatCurrency(value) {
-                return new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                }).format(value);
+                const summary = await response.json();
+                renderCart(summary);
+
+            } catch (error) {
+                console.error('Erro ao carregar carrinho:', error);
+                cartContainer.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
             }
         });
+
+        function renderCart(summary) {
+            const cartContainer = document.getElementById('cart-container');
+            
+            const itemsHtml = summary.itens.map(item => `
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <img src="${item.imagem}" alt="${item.nome}" class="cart-item-img rounded me-3">
+                        <div>
+                            <h6 class="mb-0">${item.nome}</h6>
+                            <small class="text-muted">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.preco)}</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <p class="fw-bold mb-0">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.subtotal)}</p>
+                        <small>Quantidade: ${item.quantidade}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            cartContainer.innerHTML = `
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            Itens no Carrinho
+                        </div>
+                        <div class="card-body p-0">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            Resumo do Pedido
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Subtotal</span>
+                                    <strong>${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(summary.subtotal)}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Frete</span>
+                                    <strong>${summary.frete > 0 ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(summary.frete) : 'Grátis'}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between fs-5">
+                                    <span>Total</span>
+                                    <strong class="text-primary">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(summary.total)}</strong>
+                                </li>
+                            </ul>
+                            <button class="btn btn-primary w-100 mt-3" onclick="checkout()">Finalizar Compra</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function checkout() {
+            const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+            const token = localStorage.getItem('user_token');
+
+            if (!token) {
+                alert('Você precisa de fazer login para finalizar a compra.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const pedidoDTO = {
+                itens: cartItems,
+                metodoPagamento: 'CARTAO_DE_CREDITO' // Exemplo
+            };
+
+            try {
+                const response = await fetch('/api/pedidos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(pedidoDTO)
+                });
+
+                if (response.ok) {
+                    const pedidoCriado = await response.json();
+                    alert('Pedido realizado com sucesso!');
+                    localStorage.removeItem('cart');
+                    // --- MUDANÇA PRINCIPAL AQUI ---
+                    // Redireciona para a nova página de pedido, passando o ID
+                    window.location.href = `/pedido.html?id=${pedidoCriado.id}`;
+                } else {
+                    const errorData = await response.json();
+                    alert('Falha ao finalizar o pedido: ' + (errorData.erro || response.statusText));
+                }
+            } catch (error) {
+                console.error('Erro ao finalizar pedido:', error);
+                alert('Ocorreu um erro ao finalizar o seu pedido.');
+            }
+        }
     </script>
 </body>
 </html>
